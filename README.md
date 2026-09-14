@@ -8,6 +8,8 @@
 
 <p align="center">The best free, lightweight Roblox bootstrapper.</p>
 
+> VIBECODED BLOXSTRAP FORK!
+
 Microstrap is a sleek, open-source replacement for the standard Roblox bootstrapper. It keeps your launch experience quick and clean while giving you thoughtful control over settings, integrations, mods, and engine options.
 
 > **Version 0.1.0** — Microstrap is an early release. Expect the core experience to stay lightweight while features continue to grow.
@@ -25,7 +27,7 @@ Microstrap is a sleek, open-source replacement for the standard Roblox bootstrap
 
 ## Installing
 
-Download the latest Microstrap release from the [GitHub releases page](https://github.com/microstrap/microstrap/releases/latest), then run the installer. Microstrap is currently supported on Windows PCs with the .NET 6 Desktop Runtime.
+Download the latest Microstrap release from the [GitHub releases page](https://github.com/microstraplabs/microstrap/releases/latest), then run the installer. Microstrap is currently supported on Windows PCs with the .NET 6 Desktop Runtime.
 
 ## Building
 
