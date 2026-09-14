@@ -1,4 +1,4 @@
-> VIBECODED BLOXSTRAP FORK!
+<h1 align="center">> VIBECODED BLOXSTRAP FORK!</h1>
 
 <p align="center">
   <img src="Bloxstrap/Microstrap.ico" width="112" alt="Microstrap logo">
