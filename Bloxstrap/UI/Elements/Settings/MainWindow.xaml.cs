@@ -14,6 +14,8 @@ namespace Bloxstrap.UI.Elements.Settings
     /// </summary>
     public partial class MainWindow : INavigationWindow
     {
+        private bool _launchRobloxOnClose;
+
         private Models.Persistable.WindowState _state => App.State.Prop.SettingsWindow;
 
         public MainWindow(bool showAlreadyRunningWarning)
@@ -22,6 +24,11 @@ namespace Bloxstrap.UI.Elements.Settings
 
             viewModel.RequestSaveNoticeEvent += (_, _) => SettingsSavedSnackbar.Show();
             viewModel.RequestCloseWindowEvent += (_, _) => Close();
+            viewModel.RequestLaunchRobloxEvent += (_, _) =>
+            {
+                _launchRobloxOnClose = true;
+                Close();
+            };
 
             DataContext = viewModel;
             
@@ -100,7 +107,7 @@ namespace Bloxstrap.UI.Elements.Settings
 
         private void WpfUiWindow_Closed(object sender, EventArgs e)
         {
-            if (App.LaunchSettings.TestModeFlag.Active)
+            if (_launchRobloxOnClose || App.LaunchSettings.TestModeFlag.Active)
                 LaunchHandler.LaunchRoblox(LaunchMode.Player);
             else
                 App.SoftTerminate();

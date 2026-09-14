@@ -38,6 +38,10 @@ namespace Bloxstrap
 
         public LaunchFlag ChannelFlag               { get; } = new("channel");
 
+        public LaunchFlag GameManagerLaunchFlag     { get; } = new("gamemanager");
+
+        public LaunchFlag PlayPlaceFlag             { get; } = new("playplace");
+
         public LaunchFlag ForceFlag                 { get; } = new("force");
 
 #if DEBUG

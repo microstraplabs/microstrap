@@ -1,0 +1,87 @@
+<ui:UiWindow x:Class="Bloxstrap.GameManager.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    Title="Microstrap Game Manager"
+    Width="1120" Height="720" MinWidth="820" MinHeight="500"
+    WindowStartupLocation="CenterScreen"
+    Background="#11101A" Foreground="White"
+    ExtendsContentIntoTitleBar="True">
+    <Window.Resources>
+        <DataTemplate x:Key="GameCardTemplate">
+            <Border Width="214" Margin="0,0,12,12" Padding="0" CornerRadius="14"
+                    Background="#23FFFFFF" BorderBrush="#30FFFFFF" BorderThickness="1" Cursor="Hand">
+                <Border.InputBindings>
+                    <MouseBinding MouseAction="LeftClick" Command="{Binding DataContext.OpenGameCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" />
+                </Border.InputBindings>
+                <StackPanel>
+                    <Border Height="102" CornerRadius="13,13,0,0" Background="#25213D">
+                        <Image Source="{Binding ThumbnailUrl}" Stretch="UniformToFill" RenderOptions.BitmapScalingMode="HighQuality" />
+                    </Border>
+                    <StackPanel Margin="12,10,12,12">
+                        <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" Foreground="White" />
+                        <TextBlock Margin="0,2,0,0" Text="{Binding Creator, StringFormat=by {0}}" FontSize="12" Foreground="#C2BBD3" TextTrimming="CharacterEllipsis" />
+                        <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                            <TextBlock Text="◉" FontSize="12" Foreground="#73E2A3" />
+                            <TextBlock Margin="6,0,0,0" Text="{Binding PlayingText}" FontSize="12" FontWeight="SemiBold" Foreground="White" />
+                            <TextBlock Margin="4,0,0,0" Text="playing" FontSize="12" Foreground="#9E96B3" />
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </DataTemplate>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#19152A" Offset="0" />
+                <GradientStop Color="#0D0D14" Offset="0.58" />
+                <GradientStop Color="#24183D" Offset="1" />
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <ui:TitleBar Title="Microstrap Game Manager" Icon="pack://application:,,,/Microstrap.ico" Padding="14,8" ShowMaximize="True" CanMaximize="True" />
+
+        <DockPanel Margin="38,52,38,24">
+            <Grid DockPanel.Dock="Top" Margin="0,0,0,14">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="360" />
+                </Grid.ColumnDefinitions>
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="GAME MANAGER" FontSize="11" FontWeight="Bold" Foreground="#F4CF7A" />
+                    <TextBlock Text="Find a Roblox game" FontSize="28" FontWeight="SemiBold" Foreground="White" />
+                    <TextBlock Margin="0,4,0,0" Text="Search official Roblox discovery results and launch through Microstrap." FontSize="13" Foreground="#9E96B3" />
+                </StackPanel>
+                <ui:TextBox Grid.Column="1" x:Name="SearchBox" Height="38" VerticalContentAlignment="Center"
+                            PlaceholderText="Search Roblox experiences..." Icon="Search32" VerticalAlignment="Center" />
+            </Grid>
+
+            <Grid DockPanel.Dock="Top" Margin="0,0,0,12">
+                <TextBlock x:Name="StatusText" Text="{Binding Status}" FontSize="13" Foreground="#9E96B3" />
+                <ui:Button HorizontalAlignment="Right" Content="Refresh" Icon="ArrowClockwise24" Command="{Binding RefreshCommand}" />
+            </Grid>
+
+            <ScrollViewer x:Name="GamesScrollViewer" VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <ItemsControl ItemsSource="{Binding Games}" ItemTemplate="{StaticResource GameCardTemplate}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
+                    <ProgressBar Height="3" Margin="0,4,0,8" IsIndeterminate="True">
+                        <ProgressBar.Style>
+                            <Style TargetType="ProgressBar">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsLoading}" Value="True"><Setter Property="Visibility" Value="Visible" /></DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ProgressBar.Style>
+                    </ProgressBar>
+                </StackPanel>
+            </ScrollViewer>
+        </DockPanel>
+    </Grid>
+</ui:UiWindow>

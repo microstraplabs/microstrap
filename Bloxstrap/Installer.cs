@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Reflection;
+using System.Windows;
 using Microsoft.Win32;
 
 namespace Bloxstrap
@@ -13,7 +14,7 @@ namespace Bloxstrap
         /// Which version's release notes to open
         /// Leave blank to use the current version
         /// </summary>
-        private const string ForcedReleaseNotesVersion = "2.11.2";
+        private const string ForcedReleaseNotesVersion = "0.1.0";
 
         private static string DesktopShortcut => Path.Combine(Paths.Desktop, $"{App.ProjectName}.lnk");
 
@@ -32,6 +33,10 @@ namespace Bloxstrap
         public bool IsImplicitInstall = false;
 
         public string InstallLocationError { get; set; } = "";
+
+        public static string GameManagerLocation => Path.Combine(Paths.Base, "GameManager", "GameManager.exe");
+
+        public static bool IsGameManagerInstalled => File.Exists(GameManagerLocation);
 
         public void DoInstall()
         {
@@ -103,13 +108,216 @@ namespace Bloxstrap
             App.FastFlags.Load(false);
 
             App.Settings.Prop.EnableAnalytics = EnableAnalytics;
+            App.Settings.Prop.InstallGameManager = App.InstallOptions.InstallGameManager;
 
             App.Settings.Save();
+
+            // install or remove the Game Manager based on the user's choice
+            if (App.InstallOptions.InstallGameManager)
+                InstallGameManagerWithProgress();
+            else if (IsGameManagerInstalled)
+                UninstallGameManagerWithProgress();
 
             App.Logger.WriteLine(LOG_IDENT, "Installation finished");
 
             if (!IsImplicitInstall)
                 App.SendStat("installAction", "install");
+        }
+
+        /// <summary>
+        /// Installs the Game Manager executable, showing a progress dialog
+        /// while it's being copied.
+        /// </summary>
+        public static void InstallGameManagerWithProgress()
+        {
+            const string LOG_IDENT = "Installer::InstallGameManagerWithProgress";
+
+            if (!File.Exists(Paths.Process))
+            {
+                App.Logger.WriteLine(LOG_IDENT, "Could not find the current executable, skipping Game Manager install");
+                return;
+            }
+
+            string gameManagerFolder = Path.GetDirectoryName(GameManagerLocation)!;
+
+            Directory.CreateDirectory(gameManagerFolder);
+
+            void Install(UI.Elements.Dialogs.GameManagerProgressViewModel viewModel)
+            {
+                App.Logger.WriteLine(LOG_IDENT, "Extracting Game Manager executable");
+
+                viewModel.SetProgress(0, "Preparing...");
+
+                // the Game Manager is bundled inside this executable as a
+                // resource, so it's written out in chunks with progress updates
+                WriteEmbeddedGameManager(GameManagerLocation, viewModel);
+
+                viewModel.SetProgress(100, "Done");
+
+                App.Logger.WriteLine(LOG_IDENT, "Game Manager installed");
+            }
+
+            // no dialogs in quiet mode
+            if (App.LaunchSettings.QuietFlag.Active)
+            {
+                Install(new UI.Elements.Dialogs.GameManagerProgressViewModel());
+                return;
+            }
+
+            var dialog = new UI.Elements.Dialogs.GameManagerProgressDialog();
+
+            dialog.Run("Setting up Game Manager", Install);
+        }
+
+        /// <summary>
+        /// Writes the Game Manager executable embedded in this binary to disk.
+        /// </summary>
+        private static void WriteEmbeddedGameManager(string location, UI.Elements.Dialogs.GameManagerProgressViewModel viewModel)
+        {
+            const string ResourceName = "Bloxstrap.Resources.GameManager.exe";
+
+            var assembly = Assembly.GetExecutingAssembly();
+
+            using var resourceStream = assembly.GetManifestResourceStream(ResourceName);
+
+            if (resourceStream is null)
+                throw new InvalidDataException("The Game Manager could not be found in this executable");
+
+            using var fileStream = new FileStream(location, FileMode.Create, FileAccess.Write, FileShare.None);
+
+            long totalBytes = resourceStream.Length;
+            byte[] buffer = new byte[1024 * 512];
+            long written = 0;
+            int lastPercent = -1;
+            int read;
+
+            while ((read = resourceStream.Read(buffer, 0, buffer.Length)) > 0)
+            {
+                fileStream.Write(buffer, 0, read);
+                written += read;
+
+                int percent = (int)(written * 100 / totalBytes);
+
+                if (percent != lastPercent)
+                {
+                    viewModel.SetProgress(percent, "Installing Game Manager...");
+                    lastPercent = percent;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Removes the Game Manager executable, showing a progress dialog.
+        /// </summary>
+        public static void UninstallGameManagerWithProgress()
+        {
+            const string LOG_IDENT = "Installer::UninstallGameManagerWithProgress";
+
+            string gameManagerFolder = Path.Combine(Paths.Base, "GameManager");
+
+            if (!Directory.Exists(gameManagerFolder))
+                return;
+
+            void Uninstall(UI.Elements.Dialogs.GameManagerProgressViewModel viewModel)
+            {
+                viewModel.SetProgress(0, "Removing Game Manager...");
+
+                App.Logger.WriteLine(LOG_IDENT, "Deleting the Game Manager directory");
+
+                // calculate a fake progress while deleting the folder
+                var files = Directory.EnumerateFiles(gameManagerFolder, "*", SearchOption.AllDirectories).ToList();
+                int deleted = 0;
+
+                foreach (string file in files)
+                {
+                    try
+                    {
+                        File.Delete(file);
+                    }
+                    catch (Exception ex)
+                    {
+                        App.Logger.WriteException(LOG_IDENT, ex);
+                    }
+
+                    deleted++;
+                    viewModel.SetProgress(deleted * 90 / Math.Max(files.Count, 1), "Removing Game Manager...");
+                }
+
+                try
+                {
+                    Directory.Delete(gameManagerFolder, true);
+                }
+                catch (Exception ex)
+                {
+                    App.Logger.WriteException(LOG_IDENT, ex);
+                }
+
+                viewModel.SetProgress(100, "Done");
+
+                App.Logger.WriteLine(LOG_IDENT, "Game Manager uninstalled");
+            }
+
+            // no dialogs in quiet mode
+            if (App.LaunchSettings.QuietFlag.Active)
+            {
+                Uninstall(new UI.Elements.Dialogs.GameManagerProgressViewModel());
+                return;
+            }
+
+            var dialog = new UI.Elements.Dialogs.GameManagerProgressDialog();
+
+            dialog.Run("Removing Game Manager", Uninstall);
+        }
+
+        /// <summary>
+        /// Makes sure the Game Manager is present when it's enabled, and gone
+        /// when it isn't. Called on upgrades.
+        /// </summary>
+        public static void SyncGameManager()
+        {
+            const string LOG_IDENT = "Installer::SyncGameManager";
+
+            if (App.Settings.Prop.InstallGameManager)
+            {
+                if (IsGameManagerInstalled)
+                {
+                    // update the Game Manager if this build is newer
+                    try
+                    {
+                        if (MD5Hash.FromFile(Paths.Process) != MD5Hash.FromFile(GameManagerLocation))
+                            InstallGameManagerWithProgress();
+                    }
+                    catch (Exception ex)
+                    {
+                        App.Logger.WriteException(LOG_IDENT, ex);
+                    }
+                }
+                else
+                {
+                    InstallGameManagerWithProgress();
+                }
+            }
+            else if (IsGameManagerInstalled)
+            {
+                UninstallGameManagerWithProgress();
+            }
+        }
+
+        /// <summary>
+        /// Ensures a Game Manager executable exists, extracting the bundled one
+        /// if Microstrap is already installed. Used when the Game Manager is
+        /// launched directly from a Microstrap setup executable.
+        /// </summary>
+        public static void EnsureGameManagerInstalled()
+        {
+            const string LOG_IDENT = "Installer::EnsureGameManagerInstalled";
+
+            if (IsGameManagerInstalled)
+                return;
+
+            App.Logger.WriteLine(LOG_IDENT, "Game Manager requested but not installed, installing it now");
+
+            InstallGameManagerWithProgress();
         }
 
         private bool ValidateLocation()
@@ -282,6 +490,9 @@ namespace Bloxstrap
                 WindowsRegistry.RegisterStudioFileClass(studioPath, "-ide \"%1\"");
             }
 
+            // remove the Game Manager with a progress bar before the main cleanup
+            UninstallGameManagerWithProgress();
+
             var cleanupSequence = new List<Action>
             {
                 () =>
@@ -405,6 +616,9 @@ namespace Bloxstrap
             }
 
             App.Logger.WriteLine(LOG_IDENT, "Doing upgrade");
+
+            // keep the Game Manager in sync with the user's choice
+            SyncGameManager();
 
             Filesystem.AssertReadOnly(Paths.Application);
 
@@ -630,7 +844,7 @@ namespace Bloxstrap
                         releaseNoteVersion = currentVer;
                     }
 
-                    Utilities.ShellExecute($"https://github.com/{App.ProjectRepository}/wiki/Release-notes-for-Bloxstrap-v{releaseNoteVersion}");
+                    Utilities.ShellExecute($"https://github.com/{App.ProjectRepository}/wiki/Release-notes-for-Microstrap-v{releaseNoteVersion}");
                 }
 #pragma warning restore CS0162 // Unreachable code detected
             }

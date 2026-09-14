@@ -1,0 +1,19 @@
+<base:WpfUiWindow x:Class="Bloxstrap.UI.Elements.Dialogs.GameManagerProgressDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    xmlns:base="clr-namespace:Bloxstrap.UI.Elements.Base"
+    Title="Microstrap"
+    Width="480"
+    SizeToContent="Height"
+    ResizeMode="NoResize"
+    WindowStartupLocation="CenterScreen"
+    Background="{ui:ThemeResource ApplicationBackgroundBrush}"
+    ExtendsContentIntoTitleBar="True">
+    <StackPanel Margin="24,40,24,24">
+        <TextBlock FontSize="18" FontWeight="SemiBold" Text="{Binding Title}" />
+        <TextBlock Margin="0,8,0,0" FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" Text="{Binding Message}" TextWrapping="Wrap" />
+        <ProgressBar Margin="0,18,0,0" Height="5" Maximum="100" Value="{Binding ProgressValue, Mode=OneWay}" />
+        <TextBlock Margin="0,8,0,0" FontSize="12" Foreground="{DynamicResource TextFillColorTertiaryBrush}" HorizontalAlignment="Right" Text="{Binding ProgressText}" />
+    </StackPanel>
+</base:WpfUiWindow>

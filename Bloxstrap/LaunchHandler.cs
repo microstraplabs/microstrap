@@ -31,6 +31,11 @@ namespace Bloxstrap
                     LaunchRoblox(LaunchMode.Studio);
                     break;
 
+                case NextAction.LaunchGameManager:
+                    App.Logger.WriteLine(LOG_IDENT, "Opening game manager");
+                    LaunchGameManager();
+                    break;
+
                 default:
                     App.Logger.WriteLine(LOG_IDENT, "Closing");
                     App.Terminate(isUnfinishedInstall ? ErrorCode.ERROR_INSTALL_USEREXIT : ErrorCode.ERROR_SUCCESS);
@@ -63,6 +68,16 @@ namespace Bloxstrap
             {
                 App.Logger.WriteLine(LOG_IDENT, "Opening background updater");
                 LaunchBackgroundUpdater();
+            }
+            else if (App.LaunchSettings.GameManagerLaunchFlag.Active)
+            {
+                App.Logger.WriteLine(LOG_IDENT, "Opening game manager");
+                LaunchGameManager();
+            }
+            else if (App.LaunchSettings.PlayPlaceFlag.Active)
+            {
+                App.Logger.WriteLine(LOG_IDENT, $"Launching place {App.LaunchSettings.PlayPlaceFlag.Data}");
+                LaunchGameByPlaceId(Int64.Parse(App.LaunchSettings.PlayPlaceFlag.Data ?? "0"));
             }
             else if (App.LaunchSettings.RobloxLaunchMode != LaunchMode.None)
             {
@@ -115,7 +130,7 @@ namespace Bloxstrap
             else
             {
 #if QA_BUILD
-                Frontend.ShowMessageBox("You are about to install a QA build of Bloxstrap. The red window border indicates that this is a QA build.\n\nQA builds are handled completely separately of your standard installation, like a virtual environment.", MessageBoxImage.Information);
+                Frontend.ShowMessageBox("You are about to install a QA build of Microstrap. The red window border indicates that this is a QA build.\n\nQA builds are handled completely separately of your standard installation, like a virtual environment.", MessageBoxImage.Information);
 #endif
 
                 new LanguageSelectorDialog().ShowDialog();
@@ -208,6 +223,110 @@ namespace Bloxstrap
 
         public static void LaunchRoblox(LaunchMode launchMode)
         {
+            LaunchRoblox(launchMode, null);
+        }
+
+        public static void LaunchGame(RecommendedGame game)
+        {
+            App.LaunchSettings.RobloxLaunchMode = LaunchMode.Player;
+            App.LaunchSettings.RobloxLaunchArgs = $"roblox://experiences/start?placeId={game.PlaceId}";
+            App.IsLaunchingGame = true;
+
+            // Close the settings window before showing the dedicated game launcher.
+            var settingsWindow = Application.Current.Windows
+                .OfType<UI.Elements.Settings.MainWindow>()
+                .FirstOrDefault();
+            settingsWindow?.Close();
+
+            if (settingsWindow?.IsVisible == true)
+            {
+                App.IsLaunchingGame = false;
+                return;
+            }
+
+            LaunchRoblox(LaunchMode.Player, game);
+        }
+
+        /// <summary>
+        /// Launches a game by its place id, fetching its details from Roblox.
+        /// Used by the Game Manager, which only knows the place id.
+        /// </summary>
+        public static async void LaunchGameByPlaceId(long placeId)
+        {
+            const string LOG_IDENT = "LaunchHandler::LaunchGameByPlaceId";
+
+            try
+            {
+                var games = await RobloxGamesService.GetGameDetailsAsync(placeId);
+
+                if (games.Count == 0)
+                {
+                    App.Logger.WriteLine(LOG_IDENT, $"Could not find details for place {placeId}");
+                    Frontend.ShowMessageBox("Could not find that game on Roblox.", MessageBoxImage.Error);
+                    return;
+                }
+
+                LaunchGame(games[0]);
+            }
+            catch (Exception ex)
+            {
+                App.Logger.WriteException(LOG_IDENT, ex);
+                Frontend.ShowMessageBox("Could not launch that game - Roblox could not be reached.", MessageBoxImage.Error);
+            }
+        }
+
+        /// <summary>
+        /// Opens the Microstrap Game Manager.
+        /// </summary>
+        public static void LaunchGameManager()
+        {
+            const string LOG_IDENT = "LaunchHandler::LaunchGameManager";
+
+            using var interlock = new InterProcessLock("GameManager");
+
+            if (!interlock.IsAcquired)
+            {
+                App.Logger.WriteLine(LOG_IDENT, "A game manager window is already open");
+                return;
+            }
+
+            string gameManagerLocation = Path.Combine(Paths.Base, "GameManager", "GameManager.exe");
+
+            if (!File.Exists(gameManagerLocation))
+            {
+                if (!Paths.Initialized)
+                {
+                    App.Logger.WriteLine(LOG_IDENT, "Game Manager is not installed and Microstrap isn't installed either");
+                    Frontend.ShowMessageBox("The Game Manager is not installed. Install Microstrap to get it.", MessageBoxImage.Warning);
+                    return;
+                }
+
+                // extract it on the spot if the user has chosen to have it installed
+                if (App.Settings.Prop.InstallGameManager)
+                    Installer.EnsureGameManagerInstalled();
+
+                if (!File.Exists(gameManagerLocation))
+                {
+                    App.Logger.WriteLine(LOG_IDENT, "Game Manager is still missing after extraction");
+                    Frontend.ShowMessageBox("The Game Manager is not installed. Reinstall Microstrap to get it, or turn it on from the installer.", MessageBoxImage.Warning);
+                    return;
+                }
+            }
+
+            App.Logger.WriteLine(LOG_IDENT, "Starting Game Manager");
+
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = gameManagerLocation,
+                UseShellExecute = true,
+                WorkingDirectory = Path.GetDirectoryName(gameManagerLocation)
+            });
+
+            App.Terminate();
+        }
+
+        private static void LaunchRoblox(LaunchMode launchMode, RecommendedGame? game)
+        {
             const string LOG_IDENT = "LaunchHandler::LaunchRoblox";
 
             if (launchMode == LaunchMode.None)
@@ -246,7 +365,9 @@ namespace Bloxstrap
             if (!App.LaunchSettings.QuietFlag.Active)
             {
                 App.Logger.WriteLine(LOG_IDENT, "Initializing bootstrapper dialog");
-                dialog = App.Settings.Prop.BootstrapperStyle.GetNew();
+                dialog = game is null
+                    ? App.Settings.Prop.BootstrapperStyle.GetNew()
+                    : new UI.Elements.Bootstrapper.GameLauncherDialog(game);
                 App.Bootstrapper.Dialog = dialog;
                 dialog.Bootstrapper = App.Bootstrapper;
             }
@@ -319,7 +440,7 @@ namespace Bloxstrap
             App.Logger.WriteLine(LOG_IDENT, "Initializing bootstrapper");
             App.Bootstrapper = new Bootstrapper(launchMode)
             {
-                MutexNamePrefix = "Bloxstrap-BackgroundUpdater",
+                MutexNamePrefix = "Microstrap-BackgroundUpdater",
                 QuitIfMutexExists = true
             };
 
@@ -328,7 +449,7 @@ namespace Bloxstrap
             Task.Run(() =>
             {
                 App.Logger.WriteLine(LOG_IDENT, "Started event waiter");
-                using (EventWaitHandle handle = new EventWaitHandle(false, EventResetMode.AutoReset, "Bloxstrap-BackgroundUpdaterKillEvent"))
+                using (EventWaitHandle handle = new EventWaitHandle(false, EventResetMode.AutoReset, "Microstrap-BackgroundUpdaterKillEvent"))
                     handle.WaitOne();
 
                 App.Logger.WriteLine(LOG_IDENT, "Received close event, killing it all!");

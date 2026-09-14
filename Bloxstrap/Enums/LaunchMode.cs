@@ -9,6 +9,11 @@
         Unknown,
         Player,
         Studio,
-        StudioAuth
+        StudioAuth,
+
+        /// <summary>
+        /// Opens the Microstrap Game Manager window.
+        /// </summary>
+        GameManager
     }
 }

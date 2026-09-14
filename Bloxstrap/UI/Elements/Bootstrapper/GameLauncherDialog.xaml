@@ -1,0 +1,164 @@
+<base:WpfUiWindow x:Class="Bloxstrap.UI.Elements.Bootstrapper.GameLauncherDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:base="clr-namespace:Bloxstrap.UI.Elements.Base"
+    xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+    Title="Microstrap Game Launcher"
+    Width="1280"
+    Height="720"
+    MinWidth="960"
+    MinHeight="560"
+    WindowState="Maximized"
+    WindowStyle="None"
+    ResizeMode="NoResize"
+    Background="#11101A"
+    Foreground="White"
+    ExtendsContentIntoTitleBar="True"
+    WindowStartupLocation="CenterScreen"
+    Closing="Window_Closing">
+    <Window.TaskbarItemInfo>
+        <TaskbarItemInfo ProgressState="{Binding TaskbarProgressState}" ProgressValue="{Binding TaskbarProgressValue}" />
+    </Window.TaskbarItemInfo>
+
+    <Grid>
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="#19152A" Offset="0" />
+                <GradientStop Color="#0D0D14" Offset="0.58" />
+                <GradientStop Color="#24183D" Offset="1" />
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <ui:TitleBar x:Name="RootTitleBar"
+                     Title="Microstrap Game Launcher"
+                     Icon="pack://application:,,,/Microstrap.ico"
+                     Padding="14,8"
+                     ShowMinimize="False"
+                     ShowMaximize="False"
+                     ShowClose="False"
+                     CanMaximize="False" />
+
+        <Grid Margin="72,56,72,56">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1.1*" />
+                <ColumnDefinition Width="0.9*" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Left: selected game / launch status -->
+            <StackPanel Grid.Column="0" VerticalAlignment="Center" MaxWidth="680">
+                <Border Width="112" Height="112" HorizontalAlignment="Left" CornerRadius="28" Background="#2D2647" BorderBrush="#5D4C8B" BorderThickness="1">
+                    <Image Margin="12" Source="{Binding GameIcon}" Stretch="UniformToFill" RenderOptions.BitmapScalingMode="HighQuality" />
+                </Border>
+                <TextBlock Margin="0,30,0,0" Text="{Binding GameName}" FontSize="42" FontWeight="SemiBold" TextWrapping="Wrap" />
+                <TextBlock Margin="0,10,0,0" Text="{Binding Developer, StringFormat=by {0}}" FontSize="18" Foreground="#C2BBD3" />
+                <TextBlock Margin="0,44,0,0" Text="{Binding Message}" FontSize="16" Foreground="#E3DDF0" />
+                <ProgressBar Margin="0,18,0,0" Height="5" Maximum="{Binding ProgressMaximum}" Value="{Binding ProgressValue}" IsIndeterminate="{Binding ProgressIndeterminate}" />
+            </StackPanel>
+
+            <!-- Right: search + results -->
+            <Border Grid.Column="1" Margin="60,0,0,0" Padding="30" VerticalAlignment="Center" CornerRadius="24" Background="#22FFFFFF" BorderBrush="#30FFFFFF" BorderThickness="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Margin="0,0,0,14">
+                        <TextBlock Text="MICROSTRAP" FontSize="14" FontWeight="Bold" Foreground="#F4CF7A" />
+                        <TextBlock Margin="0,10,0,0" Text="Find your next favorite game" FontSize="24" FontWeight="SemiBold" TextWrapping="Wrap" />
+                    </StackPanel>
+
+                    <Grid Grid.Row="1">
+                        <ui:TextBox x:Name="SearchBox"
+                                    Height="36"
+                                    VerticalContentAlignment="Center"
+                                    PlaceholderText="Search Roblox experiences..."
+                                    Icon="Search32" />
+                        <TextBlock x:Name="SearchStatusText"
+                                   Margin="2,42,2,0"
+                                   VerticalAlignment="Top"
+                                   FontSize="12"
+                                   Foreground="#9E96B3"
+                                   Text="{Binding SearchStatus}" />
+                    </Grid>
+
+                    <ListBox Grid.Row="2" x:Name="GamesList"
+                             Margin="0,26,0,0"
+                             ItemsSource="{Binding Games}"
+                             Background="Transparent"
+                             BorderThickness="0"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                             VirtualizingPanel.IsVirtualizing="True"
+                             VirtualizingPanel.VirtualizationMode="Recycling">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListBoxItem">
+                                            <ContentPresenter />
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border Padding="10" CornerRadius="10" Background="#18FFFFFF" BorderBrush="#30FFFFFF" BorderThickness="1">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Value="True">
+                                                    <Setter Property="BorderBrush" Value="#F4CF7A" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="56" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Border Grid.Column="0" Width="56" Height="56" CornerRadius="10" Background="#2D2647">
+                                            <Border.Clip>
+                                                <RectangleGeometry Rect="0,0,56,56" RadiusX="10" RadiusY="10" />
+                                            </Border.Clip>
+                                            <Image Source="{Binding ThumbnailUrl}" Stretch="UniformToFill" RenderOptions.BitmapScalingMode="HighQuality" />
+                                        </Border>
+                                        <StackPanel Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center">
+                                            <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" Foreground="White" />
+                                            <TextBlock Margin="0,2,0,0" Text="{Binding Creator, StringFormat=by {0}}" FontSize="12" Foreground="#C2BBD3" TextTrimming="CharacterEllipsis" />
+                                            <TextBlock Margin="0,4,0,0" FontSize="11" Foreground="#8FCA9E" Text="{Binding Playing, StringFormat=◉ {0:N0} playing}" />
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="28,0,0,24">
+            <Image Width="34" Height="34" Source="pack://application:,,,/Microstrap.ico" RenderOptions.BitmapScalingMode="HighQuality">
+                <Image.RenderTransform>
+                    <RotateTransform CenterX="17" CenterY="17" />
+                </Image.RenderTransform>
+                <Image.Style>
+                    <Style TargetType="Image">
+                        <Style.Triggers>
+                            <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                                <BeginStoryboard>
+                                    <Storyboard RepeatBehavior="Forever">
+                                        <DoubleAnimation Storyboard.TargetProperty="RenderTransform.Angle" From="0" To="360" Duration="0:0:8" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Image.Style>
+            </Image>
+            <TextBlock Margin="10,0,0,0" VerticalAlignment="Center" Text="Microstrap" FontSize="14" Foreground="#9E96B3" />
+        </StackPanel>
+    </Grid>
+</base:WpfUiWindow>

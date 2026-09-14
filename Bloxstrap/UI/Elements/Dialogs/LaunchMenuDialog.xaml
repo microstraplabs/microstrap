@@ -9,10 +9,10 @@
         xmlns:models="clr-namespace:Bloxstrap.UI.ViewModels"
         xmlns:resources="clr-namespace:Bloxstrap.Resources"
         mc:Ignorable="d"
-        Title="Bloxstrap"
+        Title="Microstrap"
         MinWidth="0"
         MinHeight="0"
-        Width="580"
+        Width="660"
         SizeToContent="Height"
         ResizeMode="NoResize"
         Background="{ui:ThemeResource ApplicationBackgroundBrush}"
@@ -24,68 +24,91 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <ui:TitleBar Grid.Row="0" Grid.ColumnSpan="2" Padding="8" ShowMinimize="False" ShowMaximize="False" Title="Bloxstrap" Icon="pack://application:,,,/Bloxstrap.ico" CanMaximize="False" KeyboardNavigation.TabNavigation="None" />
+        <ui:TitleBar Grid.Row="0" Padding="8" ShowMinimize="False" ShowMaximize="False" Title="Microstrap" Icon="pack://application:,,,/Microstrap.ico" CanMaximize="False" KeyboardNavigation.TabNavigation="None" />
 
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="280" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <Grid Grid.Column="0" VerticalAlignment="Center">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                
-                <Grid Grid.Row="0" HorizontalAlignment="Center" Margin="0,0,0,32">
+        <StackPanel Grid.Row="1" Margin="24,18,24,24">
+            <Border CornerRadius="18" Padding="24" Background="#241E3C">
+                <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-
-                    <Image Grid.Column="0" Width="64" Height="64" Source="pack://application:,,,/Bloxstrap.ico" RenderOptions.BitmapScalingMode="HighQuality" />
-                    <StackPanel Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center">
-                        <TextBlock Text="Bloxstrap" FontSize="24" />
-                        <TextBlock Text="{Binding Version, Mode=OneTime}" VerticalAlignment="Bottom" FontSize="12" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                    <Border Width="76" Height="76" CornerRadius="21" Background="#20FFFFFF" BorderBrush="#35FFFFFF" BorderThickness="1">
+                        <Image Width="55" Height="55" Source="pack://application:,,,/Microstrap.ico" RenderOptions.BitmapScalingMode="HighQuality" />
+                    </Border>
+                    <StackPanel Grid.Column="1" Margin="18,0,0,0" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="MICROSTRAP" FontSize="13" FontWeight="Bold" Foreground="#FFE9B0" />
+                            <Border Margin="10,0,0,0" Padding="8,3" CornerRadius="8" Background="#25FFFFFF">
+                                <TextBlock Text="{Binding Version, Mode=OneTime}" FontSize="11" FontWeight="SemiBold" Foreground="#FFF8E7" />
+                            </Border>
+                        </StackPanel>
+                        <TextBlock Margin="0,6,0,0" Text="Roblox, without the extra weight." FontSize="22" FontWeight="SemiBold" Foreground="White" />
+                        <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                            <Ellipse Width="8" Height="8" Fill="#73E2A3" VerticalAlignment="Center" />
+                            <TextBlock Margin="7,0,0,0" Text="{Binding SetupStatus}" FontSize="12" Foreground="#D8D0E5" />
+                        </StackPanel>
                     </StackPanel>
                 </Grid>
+            </Border>
 
-                <StackPanel Grid.Row="1" HorizontalAlignment="Center">
-                    <ui:Hyperlink Icon="QuestionCircle48" Content="{x:Static resources:Strings.About_Title}" Command="{Binding LaunchAboutCommand, Mode=OneTime}" HorizontalAlignment="Center" />
-                    <ui:Hyperlink Icon="Book24" Content="{x:Static resources:Strings.LaunchMenu_BloxstrapWiki}" NavigateUri="https://bloxstraplabs.com/wiki/" HorizontalAlignment="Center" />
-                    <ui:Hyperlink Icon="PeopleCommunity28" Content="{x:Static resources:Strings.LaunchMenu_RobloxCommunity}" NavigateUri="https://www.roblox.com/communities/32380007/Bloxstrap" HorizontalAlignment="Center" />
-                </StackPanel>
+            <TextBlock Margin="4,22,0,0" Text="Quick launch" FontSize="19" FontWeight="SemiBold" />
+            <TextBlock Margin="4,3,0,10" Text="Choose where you want to go." FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <ui:CardAction Grid.Column="0" Margin="0,0,5,0" Icon="ArrowRight12" TabIndex="0" Command="{Binding LaunchRobloxCommand, Mode=OneTime}">
+                    <StackPanel>
+                        <TextBlock FontSize="14" FontWeight="SemiBold" Text="{x:Static resources:Strings.LaunchMenu_LaunchRoblox}" />
+                        <TextBlock Margin="0,3,0,0" Text="{Binding PlayerStatus}" FontSize="12" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                    </StackPanel>
+                </ui:CardAction>
+                <ui:CardAction Grid.Column="1" Margin="5,0,0,0" Icon="Wrench24" Command="{Binding LaunchRobloxStudioCommand, Mode=OneTime}">
+                    <StackPanel>
+                        <TextBlock FontSize="14" FontWeight="SemiBold" Text="{x:Static resources:Strings.LaunchMenu_LaunchRobloxStudio}" />
+                        <TextBlock Margin="0,3,0,0" Text="{Binding StudioStatus}" FontSize="12" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                    </StackPanel>
+                </ui:CardAction>
             </Grid>
 
-            <StackPanel Grid.Column="1" Margin="16">
-                <ui:CardAction Icon="ArrowRight12" TabIndex="0" Command="{Binding LaunchRobloxCommand, Mode=OneTime}">
+            <Grid Margin="0,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <ui:CardAction Grid.Column="0" Margin="0,0,5,0" TabIndex="1" Icon="Games28" Command="{Binding LaunchGameManagerCommand, Mode=OneTime}">
                     <StackPanel>
-                        <TextBlock FontSize="14" Text="{x:Static resources:Strings.LaunchMenu_LaunchRoblox}" />
+                        <TextBlock FontSize="14" FontWeight="SemiBold" Text="Game Manager" />
+                        <TextBlock Margin="0,3,0,0" FontSize="12" Text="Browse and search every Roblox game." Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
                     </StackPanel>
                 </ui:CardAction>
-
-                <ui:CardAction Margin="0,8,0,0" Icon="Wrench24" Command="{Binding LaunchRobloxStudioCommand, Mode=OneTime}">
+                <ui:CardAction Grid.Column="1" Margin="5,0,0,0" TabIndex="2" Icon="Settings28" Command="{Binding LaunchSettingsCommand, Mode=OneTime}">
                     <StackPanel>
-                        <TextBlock FontSize="14" Text="{x:Static resources:Strings.LaunchMenu_LaunchRobloxStudio}" />
+                        <TextBlock FontSize="14" FontWeight="SemiBold" Text="{x:Static resources:Strings.LaunchMenu_ConfigureSettings}" />
+                        <TextBlock Margin="0,3,0,0" FontSize="12" Text="Change performance, appearance, and integrations." Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
                     </StackPanel>
                 </ui:CardAction>
+            </Grid>
 
-                <ui:CardAction Margin="0,8,0,0" TabIndex="1" Icon="Settings28" Command="{Binding LaunchSettingsCommand, Mode=OneTime}">
+            <Grid Margin="0,10,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <ui:CardAction Grid.Column="0" TabIndex="3" Icon="QuestionCircle48" Command="{Binding LaunchAboutCommand, Mode=OneTime}">
                     <StackPanel>
-                        <TextBlock FontSize="14" Text="{x:Static resources:Strings.LaunchMenu_ConfigureSettings}" />
+                        <TextBlock FontSize="14" FontWeight="SemiBold" Text="About Microstrap" />
+                        <TextBlock Margin="0,3,0,0" FontSize="12" Text="Learn more about this v0.1.0 release." Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
                     </StackPanel>
                 </ui:CardAction>
+            </Grid>
 
-                <Border Margin="16" />
-
-                <ui:CardAction Margin="0,8,0,0" TabIndex="2" Icon="BookQuestionMark24" Command="models:GlobalViewModel.OpenWebpageCommand" CommandParameter="https://bloxstraplabs.com/wiki/help/">
-                    <StackPanel>
-                        <TextBlock FontSize="14" Text="{x:Static resources:Strings.LaunchMenu_Wiki_Title}" />
-                        <TextBlock Margin="0,2,0,0" FontSize="12" Text="{x:Static resources:Strings.LaunchMenu_Wiki_Description}" Padding="0,0,16,0"  Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
-                    </StackPanel>
-                </ui:CardAction>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,18,0,0">
+                <ui:Hyperlink Icon="Code24" Content="GitHub" NavigateUri="https://github.com/microstrap/microstrap" Margin="0,0,20,0" />
+                <ui:Hyperlink Icon="Book24" Content="Microstrap" NavigateUri="https://github.com/microstrap/microstrap" />
             </StackPanel>
-        </Grid>
+        </StackPanel>
     </Grid>
 </base:WpfUiWindow>

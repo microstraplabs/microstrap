@@ -10,12 +10,16 @@ namespace Bloxstrap.UI.ViewModels.Settings
         public ICommand OpenAboutCommand => new RelayCommand(OpenAbout);
         
         public ICommand SaveSettingsCommand => new RelayCommand(SaveSettings);
+
+        public ICommand SaveAndLaunchRobloxCommand => new RelayCommand(SaveAndLaunchRoblox);
         
         public ICommand CloseWindowCommand => new RelayCommand(CloseWindow);
 
         public EventHandler? RequestSaveNoticeEvent;
         
         public EventHandler? RequestCloseWindowEvent;
+
+        public EventHandler? RequestLaunchRobloxEvent;
 
         public bool TestModeEnabled
         {
@@ -37,6 +41,12 @@ namespace Bloxstrap.UI.ViewModels.Settings
         private void OpenAbout() => new MainWindow().ShowDialog();
 
         private void CloseWindow() => RequestCloseWindowEvent?.Invoke(this, EventArgs.Empty);
+
+        private void SaveAndLaunchRoblox()
+        {
+            SaveSettings();
+            RequestLaunchRobloxEvent?.Invoke(this, EventArgs.Empty);
+        }
 
         private void SaveSettings()
         {

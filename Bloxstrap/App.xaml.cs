@@ -14,15 +14,15 @@ namespace Bloxstrap
     public partial class App : Application
     {
 #if QA_BUILD
-        public const string ProjectName = "Bloxstrap-QA";
+        public const string ProjectName = "Microstrap-QA";
 #else
-        public const string ProjectName = "Bloxstrap";
+        public const string ProjectName = "Microstrap";
 #endif
-        public const string ProjectOwner = "Bloxstrap";
-        public const string ProjectRepository = "bloxstraplabs/bloxstrap";
-        public const string ProjectDownloadLink = "https://bloxstraplabs.com";
-        public const string ProjectHelpLink = "https://bloxstraplabs.com/wiki/help/";
-        public const string ProjectSupportLink = "https://github.com/bloxstraplabs/bloxstrap/issues/new";
+        public const string ProjectOwner = "Microstrap";
+        public const string ProjectRepository = "microstrap/microstrap";
+        public const string ProjectDownloadLink = "https://github.com/microstrap/microstrap/releases/latest";
+        public const string ProjectHelpLink = "https://github.com/microstrap/microstrap#readme";
+        public const string ProjectSupportLink = "https://github.com/microstrap/microstrap/issues/new";
 
         public const string RobloxPlayerAppName = "RobloxPlayerBeta";
         public const string RobloxStudioAppName = "RobloxStudioBeta";
@@ -37,6 +37,13 @@ namespace Bloxstrap
         public static string Version = Assembly.GetExecutingAssembly().GetName().Version!.ToString()[..^2];
 
         public static Bootstrapper? Bootstrapper { get; set; } = null!;
+
+        public static bool IsLaunchingGame { get; set; }
+
+        /// <summary>
+        /// Options shared between the installer pages and the installation logic.
+        /// </summary>
+        public static InstallOptions InstallOptions { get; } = new();
 
         public static bool IsActionBuild => !String.IsNullOrEmpty(BuildMetadata.CommitRef);
 

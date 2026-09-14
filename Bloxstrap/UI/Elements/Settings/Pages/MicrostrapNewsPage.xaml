@@ -1,0 +1,28 @@
+﻿<ui:UiPage x:Class="Bloxstrap.UI.Elements.Settings.Pages.MicrostrapNewsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      xmlns:models="clr-namespace:Bloxstrap.UI.ViewModels"
+      mc:Ignorable="d"
+      d:DesignHeight="700" d:DesignWidth="800"
+      Title="News"
+      Scrollable="True">
+    <StackPanel Margin="0,0,14,14">
+        <TextBlock Text="Official Roblox news and platform resources, linked directly from Microstrap." FontSize="14" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
+        <StackPanel Orientation="Horizontal" Margin="0,16,0,16">
+            <ui:Button Content="DevForum announcements" Icon="News24" Command="models:GlobalViewModel.OpenWebpageCommand" CommandParameter="https://devforum.roblox.com/c/updates/announcements/36" />
+            <ui:Button Margin="8,0,0,0" Content="Engine release notes" Icon="DocumentBulletList24" Command="models:GlobalViewModel.OpenWebpageCommand" CommandParameter="https://devforum.roblox.com/c/updates/release-notes/125" />
+        </StackPanel>
+        <ui:CardAction Margin="0,0,0,10" Icon="News24" Command="models:GlobalViewModel.OpenWebpageCommand" CommandParameter="https://devforum.roblox.com/c/updates/announcements/36">
+            <StackPanel><TextBlock Text="DevForum announcements" FontSize="16" FontWeight="SemiBold" /><TextBlock Margin="0,5,0,0" Text="Read official Roblox platform announcements, creator updates, and important service changes." FontSize="13" Foreground="{DynamicResource TextFillColorTertiaryBrush}" TextWrapping="Wrap" /></StackPanel>
+        </ui:CardAction>
+        <ui:CardAction Margin="0,0,0,10" Icon="DocumentBulletList24" Command="models:GlobalViewModel.OpenWebpageCommand" CommandParameter="https://devforum.roblox.com/c/updates/release-notes/125">
+            <StackPanel><TextBlock Text="Engine release notes" FontSize="16" FontWeight="SemiBold" /><TextBlock Margin="0,5,0,0" Text="Check for current engine releases and changes that may affect Roblox experiences." FontSize="13" Foreground="{DynamicResource TextFillColorTertiaryBrush}" TextWrapping="Wrap" /></StackPanel>
+        </ui:CardAction>
+        <ui:CardAction Icon="HeartPulse24" Command="models:GlobalViewModel.OpenWebpageCommand" CommandParameter="https://status.roblox.com">
+            <StackPanel><TextBlock Text="Roblox status" FontSize="16" FontWeight="SemiBold" /><TextBlock Margin="0,5,0,0" Text="Check platform health before troubleshooting connection or launch problems." FontSize="13" Foreground="{DynamicResource TextFillColorTertiaryBrush}" TextWrapping="Wrap" /></StackPanel>
+        </ui:CardAction>
+    </StackPanel>
+</ui:UiPage>
