@@ -11,6 +11,7 @@
 Microstrap is a sleek, open-source replacement for the standard Roblox bootstrapper. It keeps your launch experience quick and clean while giving you thoughtful control over settings, integrations, mods, and engine options.
 
 > **Version 0.1.0** — Microstrap is an early release. Expect the core experience to stay lightweight while features continue to grow.
+> 🟧 WARNING: ONLY DOWNLOAD MICROSTRAP FROM THIS REPO OR FROM microstraplabs.freebuff.app. ANY OTHER SITE MAY BE FALSE AND CONTAIN MALWARE.
 
 ## Highlights
 
