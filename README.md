@@ -1,4 +1,3 @@
-# Microstrap
 
 <p align="center">
   <img src="Bloxstrap/Microstrap.ico" width="112" alt="Microstrap logo">
