@@ -37,9 +37,11 @@ namespace Bloxstrap.UI.Elements.Installer
     {
         internal readonly MainWindowViewModel _viewModel = new();
 
+        public InstallViewModel InstallViewModel { get; } = new();
+
         private Type _currentPage = typeof(WelcomePage);
 
-        private List<Type> _pages = new() { typeof(WelcomePage), typeof(InstallPage), typeof(GameManagerPage), typeof(CompletionPage) };
+        private List<Type> _pages = new() { typeof(WelcomePage), typeof(InstallPage), typeof(InstallProgressPage), typeof(GameManagerPage), typeof(CompletionPage) };
 
         private DateTimeOffset _lastNavigation = DateTimeOffset.Now;
 

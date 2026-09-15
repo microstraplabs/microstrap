@@ -209,7 +209,7 @@ namespace Bloxstrap
         /// <summary>
         /// Removes the Game Manager executable, showing a progress dialog.
         /// </summary>
-        public static void UninstallGameManagerWithProgress()
+        public static void UninstallGameManagerWithProgress(UI.Elements.Dialogs.GameManagerProgressViewModel? progressViewModel = null)
         {
             const string LOG_IDENT = "Installer::UninstallGameManagerWithProgress";
 
@@ -255,6 +255,12 @@ namespace Bloxstrap
                 viewModel.SetProgress(100, "Done");
 
                 App.Logger.WriteLine(LOG_IDENT, "Game Manager uninstalled");
+            }
+
+            if (progressViewModel is not null)
+            {
+                Uninstall(progressViewModel);
+                return;
             }
 
             // no dialogs in quiet mode
@@ -405,6 +411,23 @@ namespace Bloxstrap
 
         public static void DoUninstall(bool keepData)
         {
+            if (!App.LaunchSettings.QuietFlag.Active)
+            {
+                var dialog = new UI.Elements.Dialogs.GameManagerProgressDialog();
+                dialog.Run("Uninstalling Microstrap", progressViewModel =>
+                {
+                    progressViewModel.SetProgress(5, "Preparing uninstall...");
+                    DoUninstallCore(keepData, progressViewModel);
+                    progressViewModel.SetProgress(100, "Uninstall complete");
+                });
+                return;
+            }
+
+            DoUninstallCore(keepData);
+        }
+
+        private static void DoUninstallCore(bool keepData, UI.Elements.Dialogs.GameManagerProgressViewModel? progressViewModel = null)
+        {
             const string LOG_IDENT = "Installer::DoUninstall";
 
             var processes = new List<Process>();
@@ -490,8 +513,8 @@ namespace Bloxstrap
                 WindowsRegistry.RegisterStudioFileClass(studioPath, "-ide \"%1\"");
             }
 
-            // remove the Game Manager with a progress bar before the main cleanup
-            UninstallGameManagerWithProgress();
+            // remove the Game Manager as part of the uninstall progress screen
+            UninstallGameManagerWithProgress(progressViewModel);
 
             var cleanupSequence = new List<Action>
             {

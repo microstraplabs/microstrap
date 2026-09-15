@@ -10,8 +10,8 @@
     <Product>Microstrap</Product>
     <Description>A sleek, lightweight Roblox bootstrapper.</Description>
     <ApplicationIcon>Microstrap.ico</ApplicationIcon>
-    <Version>0.1.1</Version>
-    <FileVersion>0.1.1</FileVersion>
+    <Version>0.1.2</Version>
+    <FileVersion>0.1.2</FileVersion>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>

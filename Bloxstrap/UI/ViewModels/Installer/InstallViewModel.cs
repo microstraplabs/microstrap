@@ -63,18 +63,19 @@ namespace Bloxstrap.UI.ViewModels.Installer
             _originalInstallLocation = installer.InstallLocation;
         }
 
+        public bool ValidateInstall()
+        {
+            if (installer.CheckInstallLocation())
+                return true;
+
+            SetCanContinueEvent?.Invoke(this, false);
+            OnPropertyChanged(nameof(ErrorMessage));
+            return false;
+        }
+
         public bool DoInstall()
         {
-            if (!installer.CheckInstallLocation())
-            {
-                SetCanContinueEvent?.Invoke(this, false);
-
-                OnPropertyChanged(nameof(ErrorMessage));
-                return false;
-            }
-
             installer.DoInstall();
-
             return true;
         }
 

@@ -10,18 +10,10 @@ namespace Bloxstrap.UI.Elements.Installer.Pages
     /// </summary>
     public partial class InstallPage
     {
-        private readonly InstallViewModel _viewModel = new();
+        private InstallViewModel _viewModel = null!;
 
         public InstallPage()
         {
-            DataContext = _viewModel;
-
-            _viewModel.SetCanContinueEvent += (_, state) =>
-            {
-                if (Window.GetWindow(this) is MainWindow window)
-                    window.SetButtonEnabled("next", state);
-            };
-
             InitializeComponent();
         }
 
@@ -29,11 +21,17 @@ namespace Bloxstrap.UI.Elements.Installer.Pages
         {
             if (Window.GetWindow(this) is MainWindow window)
             {
+                _viewModel = window.InstallViewModel;
+                DataContext = _viewModel;
+
+                _viewModel.SetCanContinueEvent += (_, state) => window.SetButtonEnabled("next", state);
+
                 window.SetNextButtonText(Strings.Common_Navigation_Install);
+                window.SetButtonEnabled("next", true);
                 window.NextPageCallback += NextPageCallback;
             }
         }
 
-        public bool NextPageCallback() => _viewModel.DoInstall();
+        public bool NextPageCallback() => _viewModel.ValidateInstall();
     }
 }

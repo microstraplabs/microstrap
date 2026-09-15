@@ -40,6 +40,8 @@
                 <ui:NavigationFluent.Items>
                     <ui:NavigationItem Content="{x:Static resources:Strings.Installer_Welcome_Title}" PageType="{x:Type pages:WelcomePage}" Icon="ArrowCircleRight48" />
                     <ui:NavigationItem Content="{x:Static resources:Strings.Installer_Install_Title}" PageType="{x:Type pages:InstallPage}" Icon="ArrowCircleRight48" />
+                    <ui:NavigationItem Content="Installing..." PageType="{x:Type pages:InstallProgressPage}" Icon="ArrowCircleRight48" />
+                    <ui:NavigationItem Content="Game Manager" PageType="{x:Type pages:GameManagerPage}" Icon="ArrowCircleRight48" />
                     <ui:NavigationItem Content="{x:Static resources:Strings.Installer_Completion_Title}" PageType="{x:Type pages:CompletionPage}" Icon="ArrowCircleRight48" />
                 </ui:NavigationFluent.Items>
             </ui:NavigationFluent>
