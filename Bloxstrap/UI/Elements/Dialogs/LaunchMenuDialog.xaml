@@ -106,8 +106,8 @@
             </Grid>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,18,0,0">
-                <ui:Hyperlink Icon="Code24" Content="GitHub" NavigateUri="https://github.com/microstrap/microstrap" Margin="0,0,20,0" />
-                <ui:Hyperlink Icon="Book24" Content="Microstrap" NavigateUri="https://github.com/microstrap/microstrap" />
+                <ui:Hyperlink Icon="Globe24" Content="Official site" NavigateUri="https://microstraplabs.freebuff.app/" Margin="0,0,20,0" />
+                <ui:Hyperlink Icon="Code24" Content="GitHub" NavigateUri="https://github.com/microstraplabs/microstrap" />
             </StackPanel>
         </StackPanel>
     </Grid>

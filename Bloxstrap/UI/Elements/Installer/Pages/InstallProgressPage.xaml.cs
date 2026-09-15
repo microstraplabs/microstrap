@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Threading;
 
 namespace Bloxstrap.UI.Elements.Installer.Pages
 {
@@ -23,7 +24,7 @@ namespace Bloxstrap.UI.Elements.Installer.Pages
 
             try
             {
-                await Task.Run(() => window.InstallViewModel.DoInstall());
+                await RunOnSta(() => window.InstallViewModel.DoInstall());
                 window.Navigate(typeof(GameManagerPage));
                 window.SetNextButtonText(Strings.Common_Navigation_Next);
                 window.SetButtonEnabled("next", true);
@@ -36,6 +37,26 @@ namespace Bloxstrap.UI.Elements.Installer.Pages
                 window.SetNextButtonText(Strings.Common_Navigation_Install);
                 window.SetButtonEnabled("next", true);
             }
+        }
+
+        private static Task<bool> RunOnSta(Func<bool> operation)
+        {
+            var completion = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+            var thread = new Thread(() =>
+            {
+                try
+                {
+                    completion.SetResult(operation());
+                }
+                catch (Exception ex)
+                {
+                    completion.SetException(ex);
+                }
+            });
+
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
+            return completion.Task;
         }
     }
 }

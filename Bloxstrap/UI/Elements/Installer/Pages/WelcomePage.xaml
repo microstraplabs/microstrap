@@ -109,7 +109,7 @@
             </Grid.ColumnDefinitions>
             <Image Grid.Column="0" Width="28" RenderOptions.BitmapScalingMode="HighQuality" Source="pack://application:,,,/Resources/MessageBox/Warning.png" />
             <TextBlock Grid.Column="1" FontSize="13" Margin="12,0" Text="{Binding VersionNotice, Mode=OneWay}" TextWrapping="Wrap" />
-            <ui:Button Grid.Column="2" Icon="ArrowDownload16" Content="Download" Command="models:GlobalViewModel.OpenWebpageCommand" CommandParameter="https://github.com/microstrap/microstrap/releases/latest" />
+            <ui:Button Grid.Column="2" Icon="ArrowDownload16" Content="Download" Command="models:GlobalViewModel.OpenWebpageCommand" CommandParameter="https://github.com/microstraplabs/microstrap/releases/latest" />
         </Grid>
 
         <TextBlock Margin="4,20,0,0" FontSize="13" Text="Click Next to choose your install options." Foreground="{DynamicResource TextFillColorSecondaryBrush}" />

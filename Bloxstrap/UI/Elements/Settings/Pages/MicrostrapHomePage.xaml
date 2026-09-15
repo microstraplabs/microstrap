@@ -32,6 +32,11 @@
             </Grid>
         </Border>
 
+        <Border Margin="0,12,0,0" Padding="14" CornerRadius="10" Background="#3A2020" BorderBrush="#A85C5C" BorderThickness="1">
+            <TextBlock FontSize="13" TextWrapping="Wrap" Foreground="#FFE2E2"
+                       Text="Make sure your Microstrap was downloaded from https://microstraplabs.freebuff.app/ or the official GitHub Repo. If you downloaded this binary from someone--or somewhere else, delete it and run a virus scan." />
+        </Border>
+
         <TextBlock Margin="0,22,0,8" Text="Quick access" FontSize="20" FontWeight="SemiBold" />
         <Grid>
             <Grid.ColumnDefinitions>
@@ -42,10 +47,10 @@
             <ui:CardAction Grid.Column="0" Margin="0,0,5,0" Icon="Games24" Command="models:GlobalViewModel.OpenWebpageCommand" CommandParameter="https://www.roblox.com/discover">
                 <StackPanel><TextBlock Text="Discover games" FontSize="14" FontWeight="SemiBold" /><TextBlock Margin="0,3,0,0" Text="Find something new to play." FontSize="12" Foreground="{DynamicResource TextFillColorTertiaryBrush}" TextWrapping="Wrap" /></StackPanel>
             </ui:CardAction>
-            <ui:CardAction Grid.Column="1" Margin="5,0,5,0" Icon="Settings24" Command="models:GlobalViewModel.OpenWebpageCommand" CommandParameter="https://github.com/microstrap/microstrap">
+            <ui:CardAction Grid.Column="1" Margin="5,0,5,0" Icon="Settings24" Command="models:GlobalViewModel.OpenWebpageCommand" CommandParameter="https://microstraplabs.freebuff.app/">
                 <StackPanel><TextBlock Text="Microstrap project" FontSize="14" FontWeight="SemiBold" /><TextBlock Margin="0,3,0,0" Text="View updates and source code." FontSize="12" Foreground="{DynamicResource TextFillColorTertiaryBrush}" TextWrapping="Wrap" /></StackPanel>
             </ui:CardAction>
-            <ui:CardAction Grid.Column="2" Margin="5,0,0,0" Icon="QuestionCircle24" Command="models:GlobalViewModel.OpenWebpageCommand" CommandParameter="https://github.com/microstrap/microstrap/issues">
+            <ui:CardAction Grid.Column="2" Margin="5,0,0,0" Icon="QuestionCircle24" Command="models:GlobalViewModel.OpenWebpageCommand" CommandParameter="https://github.com/microstraplabs/microstrap/issues">
                 <StackPanel><TextBlock Text="Get help" FontSize="14" FontWeight="SemiBold" /><TextBlock Margin="0,3,0,0" Text="Report a problem or request a feature." FontSize="12" Foreground="{DynamicResource TextFillColorTertiaryBrush}" TextWrapping="Wrap" /></StackPanel>
             </ui:CardAction>
         </Grid>

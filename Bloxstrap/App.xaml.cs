@@ -20,9 +20,10 @@ namespace Bloxstrap
 #endif
         public const string ProjectOwner = "Microstrap";
         public const string ProjectRepository = "microstraplabs/microstrap";
+        public const string ProjectWebsite = "https://microstraplabs.freebuff.app/";
         public const string ProjectDownloadLink = "https://github.com/microstraplabs/microstrap/releases/latest";
-        public const string ProjectHelpLink = "https://github.com/microstraplabs/microstrap#readme";
-        public const string ProjectSupportLink = "https://github.com/microstraplabs/microstrap/issues/new";
+        public const string ProjectHelpLink = ProjectWebsite;
+        public const string ProjectSupportLink = ProjectWebsite;
 
         public const string RobloxPlayerAppName = "RobloxPlayerBeta";
         public const string RobloxStudioAppName = "RobloxStudioBeta";
@@ -174,6 +175,9 @@ namespace Bloxstrap
         {
             const string LOG_IDENT = "App::CheckForUpdatesAtStartup";
 
+            if (!Current.Dispatcher.CheckAccess())
+                return await Current.Dispatcher.InvokeAsync(CheckForUpdatesAtStartup).Task.Unwrap();
+
             try
             {
                 Bootstrapper = new Bootstrapper(LaunchMode.Player);
@@ -188,8 +192,8 @@ namespace Bloxstrap
 
                 // CheckForUpdates runs asynchronously while the modal dialog keeps the UI responsive.
                 _ = updateTask.ContinueWith(
-                    _ => dialog.CloseBootstrapper(),
-                    TaskScheduler.FromCurrentSynchronizationContext()
+                    _ => Current.Dispatcher.BeginInvoke(() => dialog.CloseBootstrapper()),
+                    TaskScheduler.Default
                 );
 
                 dialog.ShowBootstrapper();

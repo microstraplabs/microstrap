@@ -51,12 +51,15 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <ui:NavigationFluent x:Name="RootNavigation" Grid.Row="1" Grid.Column="0" Margin="0,0,12,0" Frame="{Binding ElementName=RootFrame}" SelectedPageIndex="0">
+            <ui:NavigationFluent x:Name="RootNavigation" Grid.Row="1" Grid.Column="0" Margin="0,0,12,0" Frame="{Binding ElementName=RootFrame}" SelectedPageIndex="1">
                 <ui:NavigationFluent.Items>
+                    <ui:NavigationItem Content="BASIC" IsEnabled="False" />
                     <ui:NavigationItem Content="Home" PageType="{x:Type pages:MicrostrapHomePage}" Icon="Home24" Tag="home" />
                     <ui:NavigationItem Content="News" PageType="{x:Type pages:MicrostrapNewsPage}" Icon="News24" Tag="news" />
                     <ui:NavigationItem Content="Changelog" PageType="{x:Type pages:MicrostrapChangelogPage}" Icon="DocumentText24" Tag="changelog" />
+                    <ui:NavigationItem Content="GAMES" IsEnabled="False" />
                     <ui:NavigationItem Content="Games" PageType="{x:Type pages:GamesPage}" Icon="Games24" Tag="games" />
+                    <ui:NavigationItem Content="CUSTOMIZATION" IsEnabled="False" />
                     <ui:NavigationItem Content="{x:Static resources:Strings.Menu_Integrations_Title}" PageType="{x:Type pages:IntegrationsPage}" Icon="Add28" Tag="integrations" />
                     <ui:NavigationItem Content="{x:Static resources:Strings.Menu_Behaviour_Title}" PageType="{x:Type pages:BehaviourPage}" Icon="PlaySettings20" Tag="bootstrapper" />
                     <ui:NavigationItem Content="{x:Static resources:Strings.Menu_Mods_Title}" PageType="{x:Type pages:ModsPage}" Icon="WrenchScrewdriver20" Tag="mods" />
