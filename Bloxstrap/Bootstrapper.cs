@@ -197,16 +197,6 @@ namespace Bloxstrap
             if (connectionResult is not null)
                 HandleConnectionError(connectionResult);
             
-#if (!DEBUG || DEBUG_UPDATER) && !QA_BUILD
-            if (App.Settings.Prop.CheckForUpdates && !App.LaunchSettings.UpgradeFlag.Active)
-            {
-                bool updatePresent = await CheckForUpdates();
-                
-                if (updatePresent)
-                    return;
-            }
-#endif
-
             App.AssertWindowsOSVersion();
 
             // if we dont know our launch type, find out now!
@@ -768,7 +758,7 @@ namespace Bloxstrap
 #endregion
 
         #region App Install
-        private async Task<bool> CheckForUpdates()
+        public async Task<bool> CheckForUpdates()
         {
             const string LOG_IDENT = "Bootstrapper::CheckForUpdates";
             
@@ -782,6 +772,9 @@ namespace Bloxstrap
 
             App.Logger.WriteLine(LOG_IDENT, "Checking for updates...");
 
+            if (Dialog is not null)
+                Dialog.Message = "Checking for Microstrap updates...";
+
 #if !DEBUG_UPDATER
             var releaseInfo = await App.GetLatestRelease();
 
@@ -790,8 +783,8 @@ namespace Bloxstrap
 
             var versionComparison = Utilities.CompareVersions(App.Version, releaseInfo.TagName);
 
-            // check if we aren't using a deployed build, so we can update to one if a new version comes out
-            if (App.IsProductionBuild && versionComparison == VersionComparison.Equal || versionComparison == VersionComparison.GreaterThan)
+            // Never download an equal or older release. This applies to local and production builds.
+            if (versionComparison == VersionComparison.Equal || versionComparison == VersionComparison.GreaterThan)
             {
                 App.Logger.WriteLine(LOG_IDENT, "No updates found");
                 return false;
@@ -880,6 +873,7 @@ namespace Bloxstrap
                 new InterProcessLock("AutoUpdater");
                 
                 Process.Start(startInfo);
+                Dialog?.CloseBootstrapper();
 
                 return true;
             }

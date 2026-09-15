@@ -170,6 +170,39 @@ namespace Bloxstrap
             return true;
         }
 
+        private static async Task<bool> CheckForUpdatesAtStartup()
+        {
+            const string LOG_IDENT = "App::CheckForUpdatesAtStartup";
+
+            try
+            {
+                Bootstrapper = new Bootstrapper(LaunchMode.Player);
+                var dialog = Settings.Prop.BootstrapperStyle.GetNew();
+
+                Bootstrapper.Dialog = dialog;
+                dialog.Bootstrapper = Bootstrapper;
+                dialog.Message = "Checking for Microstrap updates...";
+                dialog.CancelEnabled = false;
+
+                Task<bool> updateTask = Bootstrapper.CheckForUpdates();
+
+                // CheckForUpdates runs asynchronously while the modal dialog keeps the UI responsive.
+                _ = updateTask.ContinueWith(
+                    _ => dialog.CloseBootstrapper(),
+                    TaskScheduler.FromCurrentSynchronizationContext()
+                );
+
+                dialog.ShowBootstrapper();
+                return await updateTask;
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteException(LOG_IDENT, ex);
+                Bootstrapper?.Dialog?.CloseBootstrapper();
+                return false;
+            }
+        }
+
         public static async Task<GithubRelease?> GetLatestRelease()
         {
             const string LOG_IDENT = "App::GetLatestRelease";
@@ -243,7 +276,7 @@ namespace Bloxstrap
             }
         }
 
-        protected override void OnStartup(StartupEventArgs e)
+        protected override async void OnStartup(StartupEventArgs e)
         {
             const string LOG_IDENT = "App::OnStartup";
 
@@ -397,6 +430,21 @@ namespace Bloxstrap
 
                 if (!LaunchSettings.BypassUpdateCheck)
                     Installer.HandleUpgrade();
+
+                if (!LaunchSettings.BypassUpdateCheck
+                    && !LaunchSettings.UpgradeFlag.Active
+                    && !LaunchSettings.BackgroundUpdaterFlag.Active
+                    && !LaunchSettings.WatcherFlag.Active
+                    && Settings.Prop.CheckForUpdates)
+                {
+                    bool updateStarted = await CheckForUpdatesAtStartup();
+
+                    if (updateStarted)
+                    {
+                        Terminate();
+                        return;
+                    }
+                }
 
                 LaunchHandler.ProcessLaunchArgs();
             }
