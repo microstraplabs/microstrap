@@ -10,8 +10,8 @@
     <Product>Microstrap</Product>
     <Description>A sleek, lightweight Roblox bootstrapper.</Description>
     <ApplicationIcon>Microstrap.ico</ApplicationIcon>
-    <Version>0.1.5</Version>
-    <FileVersion>0.1.5</FileVersion>
+    <Version>0.1.6</Version>
+    <FileVersion>0.1.6</FileVersion>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
@@ -53,6 +53,8 @@
     <EmbeddedResource Include="Resources\Mods\Sounds\OldWalk.mp3" />
     <EmbeddedResource Include="Resources\Mods\Sounds\Empty.mp3" />
     <EmbeddedResource Include="Resources\Mods\OldAvatarBackground.rbxl" />
+    <EmbeddedResource Include="Resources\MicrostrapOverlay.py" />
+    <EmbeddedResource Include="Resources\MicrostrapOverlayRuntime.zip" Condition="Exists('Resources\MicrostrapOverlayRuntime.zip')" />
   </ItemGroup>
 
   <ItemGroup>
@@ -87,7 +89,7 @@
     <EmbeddedResource Include="Resources\GameManager.exe" Condition="Exists('Resources\GameManager.exe')" />
   </ItemGroup>
 
-  <!-- Pull the freshly built Game Manager exe into Resources before compiling, so it gets embedded into Microstrap -->
+  <!-- Build the Game Manager before importing its executable. The solution dependency keeps this from racing the solution build. -->
   <Target Name="PublishGameManager" BeforeTargets="ImportGameManager" Condition="!Exists('..\GameManager\bin\$(Configuration)\net6.0-windows\win-x64\publish\GameManager.exe')">
     <Exec Command="dotnet publish &quot;..\GameManager\GameManager.csproj&quot; -c $(Configuration) --nologo" />
   </Target>

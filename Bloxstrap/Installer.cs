@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.IO.Compression;
+using System.Reflection;
 using System.Windows;
 using Microsoft.Win32;
 
@@ -109,8 +110,11 @@ namespace Bloxstrap
 
             App.Settings.Prop.EnableAnalytics = EnableAnalytics;
             App.Settings.Prop.InstallGameManager = App.InstallOptions.InstallGameManager;
+            EnsureOverlayIntegration();
 
             App.Settings.Save();
+
+            InstallOverlay();
 
             // install or remove the Game Manager based on the user's choice
             if (App.InstallOptions.InstallGameManager)
@@ -122,6 +126,58 @@ namespace Bloxstrap
 
             if (!IsImplicitInstall)
                 App.SendStat("installAction", "install");
+        }
+
+        public static void EnsureOverlayIntegration()
+        {
+            CustomIntegration? overlay = App.Settings.Prop.CustomIntegrations.FirstOrDefault(x => x.Name.Equals("Microstrap Overlay", StringComparison.OrdinalIgnoreCase));
+            if (overlay is null)
+            {
+                App.Settings.Prop.CustomIntegrations.Insert(0, overlay = new CustomIntegration
+                {
+                    Name = "Microstrap Overlay",
+                    AutoClose = true,
+                    Enabled = true
+                });
+            }
+
+            if (String.IsNullOrEmpty(overlay.Location))
+                overlay.Location = OverlayPaths.Launcher;
+        }
+
+        private static void InstallOverlay()
+        {
+            const string LOG_IDENT = "Installer::InstallOverlay";
+
+            try
+            {
+                Directory.CreateDirectory(OverlayPaths.Directory);
+                using (Stream resource = Resource.GetStream("MicrostrapOverlay.py"))
+                using (FileStream output = File.Create(OverlayPaths.Script))
+                    resource.CopyTo(output);
+
+                try
+                {
+                    using Stream runtimeResource = Resource.GetStream("MicrostrapOverlayRuntime.zip");
+                    using ZipArchive archive = new(runtimeResource, ZipArchiveMode.Read);
+                    archive.ExtractToDirectory(OverlayPaths.Directory, true);
+                }
+                catch (InvalidOperationException)
+                {
+                    // Local builds may not include the optional Python runtime archive.
+                }
+
+                string launcher = $"@echo off\r\n"
+                    + $"if exist \"{OverlayPaths.Runtime}\" \"{OverlayPaths.Runtime}\" \"{OverlayPaths.Script}\" %* & exit /b\r\n"
+                    + $"where python >nul 2>nul && python \"{OverlayPaths.Script}\" %*\r\n";
+                File.WriteAllText(OverlayPaths.Launcher, launcher);
+
+                App.Logger.WriteLine(LOG_IDENT, "Overlay files installed");
+            }
+            catch (Exception ex)
+            {
+                App.Logger.WriteException(LOG_IDENT, ex);
+            }
         }
 
         /// <summary>

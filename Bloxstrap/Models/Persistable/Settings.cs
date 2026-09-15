@@ -29,7 +29,10 @@ namespace Bloxstrap.Models.Persistable
         public bool HideRPCButtons { get; set; } = true;
         public bool ShowAccountOnRichPresence { get; set; } = false;
         public bool ShowServerDetails { get; set; } = false;
-        public ObservableCollection<CustomIntegration> CustomIntegrations { get; set; } = new();
+        public ObservableCollection<CustomIntegration> CustomIntegrations { get; set; } = new()
+        {
+            new CustomIntegration { Name = "Microstrap Overlay", Enabled = false }
+        };
 
         // mod preset configuration
         public bool UseDisableAppPatch { get; set; } = false;

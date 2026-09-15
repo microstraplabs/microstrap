@@ -14,6 +14,15 @@ jobs:
       with:
         dotnet-version: '6.0.x'
 
+    - name: Build embedded Python runtime
+      shell: pwsh
+      run: |
+        $installer = Join-Path $env:RUNNER_TEMP 'python-installer.exe'
+        $runtime = Join-Path $env:RUNNER_TEMP 'microstrap-python'
+        Invoke-WebRequest https://www.python.org/ftp/python/3.11.9/python-3.11.9-amd64.exe -OutFile $installer
+        Start-Process $installer -Wait -ArgumentList @('/quiet', 'InstallAllUsers=0', "TargetDir=$runtime", 'Include_launcher=0', 'Include_test=0', 'PrependPath=0')
+        Compress-Archive -Path (Join-Path $runtime '*') -DestinationPath .\Bloxstrap\Resources\MicrostrapOverlayRuntime.zip
+
     - name: Restore dependencies
       run: dotnet restore
 

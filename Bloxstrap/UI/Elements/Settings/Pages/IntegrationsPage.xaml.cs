@@ -11,8 +11,25 @@ namespace Bloxstrap.UI.Elements.Settings.Pages
     {
         public IntegrationsPage()
         {
-            DataContext = new IntegrationsViewModel();
             InitializeComponent();
+
+            var viewModel = new IntegrationsViewModel();
+            if (viewModel.CustomIntegrations.Count == 0)
+            {
+                viewModel.CustomIntegrations.Add(new CustomIntegration
+                {
+                    Name = "Microstrap Overlay",
+                    Location = OverlayPaths.Launcher,
+                    Enabled = false,
+                    AutoClose = true
+                });
+                viewModel.SelectedCustomIntegration = viewModel.CustomIntegrations[0];
+                viewModel.SelectedCustomIntegrationIndex = 0;
+            }
+
+            DataContext = viewModel;
+            CustomIntegrationsListBox.ItemsSource = viewModel.CustomIntegrations;
+            CustomIntegrationsListBox.SelectedIndex = viewModel.SelectedCustomIntegrationIndex;
         }
 
         public void CustomIntegrationSelection(object sender, SelectionChangedEventArgs e)

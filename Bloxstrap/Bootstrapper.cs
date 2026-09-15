@@ -641,7 +641,10 @@ namespace Bloxstrap
             var autoclosePids = new List<int>();
 
             // launch custom integrations now
-            foreach (var integration in App.Settings.Prop.CustomIntegrations)
+            Installer.EnsureOverlayIntegration();
+            App.Settings.Save();
+
+            foreach (var integration in App.Settings.Prop.CustomIntegrations.Where(x => x.Enabled))
             {
                 App.Logger.WriteLine(LOG_IDENT, $"Launching custom integration '{integration.Name}' ({integration.Location} {integration.LaunchArgs} - autoclose is {integration.AutoClose})");
 

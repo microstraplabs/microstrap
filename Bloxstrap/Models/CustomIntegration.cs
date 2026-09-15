@@ -6,5 +6,6 @@
         public string Location { get; set; } = "";
         public string LaunchArgs { get; set; } = "";
         public bool AutoClose { get; set; } = true;
+        public bool Enabled { get; set; } = true;
     }
 }

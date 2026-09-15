@@ -9,6 +9,26 @@ namespace Bloxstrap.UI.ViewModels.Settings
 {
     public class IntegrationsViewModel : NotifyPropertyChangedViewModel
     {
+        public IntegrationsViewModel()
+        {
+            CustomIntegration? overlay = CustomIntegrations.FirstOrDefault(x => x.Name.Equals("Microstrap Overlay", StringComparison.OrdinalIgnoreCase));
+            if (overlay is null)
+            {
+                CustomIntegrations.Insert(0, overlay = new CustomIntegration
+                {
+                    Name = "Microstrap Overlay",
+                    AutoClose = true,
+                    Enabled = true
+                });
+            }
+
+            if (String.IsNullOrEmpty(overlay.Location))
+                overlay.Location = OverlayPaths.Launcher;
+
+            SelectedCustomIntegration = overlay;
+            SelectedCustomIntegrationIndex = CustomIntegrations.IndexOf(overlay);
+        }
+
         public ICommand AddIntegrationCommand => new RelayCommand(AddIntegration);
 
         public ICommand DeleteIntegrationCommand => new RelayCommand(DeleteIntegration);
@@ -19,7 +39,8 @@ namespace Bloxstrap.UI.ViewModels.Settings
         {
             CustomIntegrations.Add(new CustomIntegration()
             {
-                Name = Strings.Menu_Integrations_Custom_NewIntegration
+                Name = Strings.Menu_Integrations_Custom_NewIntegration,
+                Enabled = true
             });
 
             SelectedCustomIntegrationIndex = CustomIntegrations.Count - 1;
