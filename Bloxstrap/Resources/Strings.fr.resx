@@ -158,7 +158,7 @@
     <value>Mise à jour de {product}...</value>
   </data>
   <data name="Bootstrapper.Status.UpgradingBloxstrap" xml:space="preserve">
-    <value>Obtention de la dernière version de Bloxstrap...</value>
+    <value>Microstrap is updating... please wait.</value>
   </data>
   <data name="Bootstrapper.Status.WaitingOtherInstances" xml:space="preserve">
     <value>En attente d'autres instances...</value>

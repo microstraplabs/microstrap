@@ -6,6 +6,7 @@
       xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
       xmlns:models="clr-namespace:Bloxstrap.UI.ViewModels"
       xmlns:resources="clr-namespace:Bloxstrap.Resources"
+      xmlns:app="clr-namespace:Bloxstrap"
       mc:Ignorable="d"
       d:DesignHeight="700" d:DesignWidth="800"
       Title="Home"
@@ -23,6 +24,8 @@
                     <StackPanel Orientation="Horizontal" Margin="0,18,0,0">
                         <ui:Button Content="Play Roblox" Icon="Play24" Appearance="Primary" Command="models:GlobalViewModel.OpenWebpageCommand" CommandParameter="roblox://" />
                         <ui:Button Margin="8,0,0,0" Content="Open Roblox website" Icon="Open24" Command="models:GlobalViewModel.OpenWebpageCommand" CommandParameter="https://www.roblox.com/home" />
+                        <!-- TEMPORARY: antivirus false-positive workaround, remove once Microstrap is code-signed -->
+                        <ui:Button Margin="8,0,0,0" Content="Add to exclusions" Icon="Shield24" Click="AddToExclusions_Click" />
                     </StackPanel>
                 </StackPanel>
                 <Image Grid.Column="1" Width="104" Height="104" Margin="28,0,8,0" Source="pack://application:,,,/Microstrap.ico" RenderOptions.BitmapScalingMode="HighQuality" />
@@ -56,7 +59,7 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0"><TextBlock Text="STATUS" FontSize="10" Foreground="{DynamicResource TextFillColorTertiaryBrush}" /><TextBlock Margin="0,5,0,0" Text="Ready" FontSize="16" FontWeight="SemiBold" Foreground="#73E2A3" /><TextBlock Margin="0,3,0,0" Text="Microstrap is ready for Roblox" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" /></StackPanel>
-                <StackPanel Grid.Column="1"><TextBlock Text="VERSION" FontSize="10" Foreground="{DynamicResource TextFillColorTertiaryBrush}" /><TextBlock Margin="0,5,0,0" Text="0.1.0" FontSize="16" FontWeight="SemiBold" Foreground="#29D3E6" /><TextBlock Margin="0,3,0,0" Text="First public release" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" /></StackPanel>
+                <StackPanel Grid.Column="1"><TextBlock Text="VERSION" FontSize="10" Foreground="{DynamicResource TextFillColorTertiaryBrush}" /><TextBlock Margin="0,5,0,0" Text="{x:Static app:App.Version}" FontSize="16" FontWeight="SemiBold" Foreground="#29D3E6" /><TextBlock Margin="0,3,0,0" Text="First public release" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" /></StackPanel>
                 <StackPanel Grid.Column="2"><TextBlock Text="TIP" FontSize="10" Foreground="{DynamicResource TextFillColorTertiaryBrush}" /><TextBlock Margin="0,5,0,0" Text="Use Games" FontSize="16" FontWeight="SemiBold" Foreground="#DFA7FF" /><TextBlock Margin="0,3,0,0" Text="to search official recommendations" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" /></StackPanel>
             </Grid>
         </Border>

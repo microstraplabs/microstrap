@@ -158,7 +158,7 @@
     <value>Đang cập nhật {product}...</value>
   </data>
   <data name="Bootstrapper.Status.UpgradingBloxstrap" xml:space="preserve">
-    <value>Đang tải xuống phiên bản mới nhất của Bloxstrap...</value>
+    <value>Microstrap is updating... please wait.</value>
   </data>
   <data name="Bootstrapper.Status.WaitingOtherInstances" xml:space="preserve">
     <value>Đang đợi các tiến trình khác...</value>

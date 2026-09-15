@@ -158,7 +158,7 @@
     <value>Nadograđuje se {product}...</value>
   </data>
   <data name="Bootstrapper.Status.UpgradingBloxstrap" xml:space="preserve">
-    <value>Dohvaća se najnoviji Bloxstrap...</value>
+    <value>Microstrap is updating... please wait.</value>
   </data>
   <data name="Bootstrapper.Status.WaitingOtherInstances" xml:space="preserve">
     <value>Čekanje ostalih instanca...</value>

@@ -816,20 +816,45 @@ namespace Bloxstrap
 
                 File.Copy(Paths.Process, downloadLocation, true);
 #else
-                var asset = releaseInfo.Assets![0];
+                // only accept the Microstrap executable asset, never a random first asset
+                var asset = releaseInfo.Assets!.FirstOrDefault(x => x.Name.Equals("Microstrap.exe", StringComparison.OrdinalIgnoreCase));
 
-                string downloadLocation = Path.Combine(Paths.TempUpdates, asset.Name);
+                if (asset is null)
+                {
+                    App.Logger.WriteLine(LOG_IDENT, "No Microstrap.exe asset found in latest release, aborting update");
+                    return false;
+                }
+
+                string downloadLocation = Path.Combine(Paths.TempUpdates, "Microstrap.exe");
 
                 Directory.CreateDirectory(Paths.TempUpdates);
 
                 App.Logger.WriteLine(LOG_IDENT, $"Downloading {releaseInfo.TagName}...");
-                
-                if (!File.Exists(downloadLocation))
-                {
-                    var response = await App.HttpClient.GetAsync(asset.BrowserDownloadUrl);
 
-                    await using var fileStream = new FileStream(downloadLocation, FileMode.OpenOrCreate, FileAccess.Write);
-                    await response.Content.CopyToAsync(fileStream);
+                if (!File.Exists(downloadLocation))
+                    await DownloadUpdateAsset(LOG_IDENT, asset, downloadLocation);
+
+                // verify the downloaded update matches GitHub's published digest, when available
+                if (!String.IsNullOrEmpty(asset.Digest) && asset.Digest.StartsWith("sha256:", StringComparison.OrdinalIgnoreCase))
+                {
+                    string expectedHash = asset.Digest[7..];
+                    string actualHash = await CalculateFileHashAsync(downloadLocation);
+
+                    if (!actualHash.Equals(expectedHash, StringComparison.OrdinalIgnoreCase))
+                    {
+                        App.Logger.WriteLine(LOG_IDENT, $"Update hash mismatch ({actualHash} != {expectedHash}), deleting and aborting");
+                        File.Delete(downloadLocation);
+
+                        Frontend.ShowMessageBox(
+                            string.Format(Strings.Bootstrapper_AutoUpdateFailed, version),
+                            MessageBoxImage.Information
+                        );
+
+                        Utilities.ShellExecute(App.ProjectDownloadLink);
+                        return false;
+                    }
+
+                    App.Logger.WriteLine(LOG_IDENT, "Update hash verified successfully");
                 }
 #endif
 
@@ -1456,6 +1481,80 @@ namespace Bloxstrap
                 App.Logger.WriteLine(LOG_IDENT, "Failed to apply all modifications");
 
             return success;
+        }
+
+        /// <summary>
+        /// Downloads a release asset to disk with progress reporting and up to 5 attempts.
+        /// </summary>
+        private async Task DownloadUpdateAsset(string logIdent, GithubReleaseAsset asset, string downloadLocation)
+        {
+            const int maxTries = 5;
+            var buffer = new byte[8192];
+
+            App.Logger.WriteLine(logIdent, $"Downloading {asset.BrowserDownloadUrl}...");
+
+            for (int i = 1; i <= maxTries; i++)
+            {
+                try
+                {
+                    using var response = await App.HttpClient.GetAsync(asset.BrowserDownloadUrl, HttpCompletionOption.ResponseHeadersRead);
+                    response.EnsureSuccessStatusCode();
+
+                    long totalBytes = response.Content.Headers.ContentLength ?? -1;
+
+                    if (Dialog is not null)
+                    {
+                        Dialog.ProgressStyle = ProgressBarStyle.Continuous;
+                        Dialog.TaskbarProgressState = TaskbarItemProgressState.Normal;
+                        Dialog.ProgressMaximum = ProgressBarMaximum;
+                        Dialog.ProgressValue = 0;
+                        Dialog.TaskbarProgressValue = 0;
+                    }
+
+                    await using var contentStream = await response.Content.ReadAsStreamAsync();
+                    await using var fileStream = new FileStream(downloadLocation, FileMode.Create, FileAccess.Write);
+
+                    long downloadedBytes = 0;
+                    int bytesRead;
+
+                    while ((bytesRead = await contentStream.ReadAsync(buffer)) > 0)
+                    {
+                        await fileStream.WriteAsync(buffer.AsMemory(0, bytesRead));
+                        downloadedBytes += bytesRead;
+
+                        if (totalBytes > 0 && Dialog is not null)
+                        {
+                            double fraction = (double)downloadedBytes / totalBytes;
+
+                            Dialog.ProgressValue = Math.Clamp((int)(fraction * ProgressBarMaximum), 0, ProgressBarMaximum);
+                            Dialog.TaskbarProgressValue = Math.Clamp(fraction, 0, 1);
+                        }
+                    }
+
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    App.Logger.WriteLine(logIdent, $"Download attempt {i} of {maxTries} failed");
+                    App.Logger.WriteException(logIdent, ex);
+
+                    if (File.Exists(downloadLocation))
+                        File.Delete(downloadLocation);
+
+                    if (i == maxTries)
+                        throw;
+
+                    await Task.Delay(1000 * i);
+                }
+            }
+        }
+
+        private static async Task<string> CalculateFileHashAsync(string filePath)
+        {
+            await using var stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read);
+            using var sha256 = System.Security.Cryptography.SHA256.Create();
+            byte[] hash = await sha256.ComputeHashAsync(stream);
+            return Convert.ToHexString(hash);
         }
 
         private async Task DownloadPackage(Package package)

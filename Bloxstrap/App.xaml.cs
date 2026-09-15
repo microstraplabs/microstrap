@@ -19,10 +19,10 @@ namespace Bloxstrap
         public const string ProjectName = "Microstrap";
 #endif
         public const string ProjectOwner = "Microstrap";
-        public const string ProjectRepository = "microstrap/microstrap";
-        public const string ProjectDownloadLink = "https://github.com/microstrap/microstrap/releases/latest";
-        public const string ProjectHelpLink = "https://github.com/microstrap/microstrap#readme";
-        public const string ProjectSupportLink = "https://github.com/microstrap/microstrap/issues/new";
+        public const string ProjectRepository = "microstraplabs/microstrap";
+        public const string ProjectDownloadLink = "https://github.com/microstraplabs/microstrap/releases/latest";
+        public const string ProjectHelpLink = "https://github.com/microstraplabs/microstrap#readme";
+        public const string ProjectSupportLink = "https://github.com/microstraplabs/microstrap/issues/new";
 
         public const string RobloxPlayerAppName = "RobloxPlayerBeta";
         public const string RobloxStudioAppName = "RobloxStudioBeta";

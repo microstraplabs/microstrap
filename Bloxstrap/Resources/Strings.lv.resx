@@ -158,7 +158,7 @@
     <value>Notiek {product} jaunināšana...</value>
   </data>
   <data name="Bootstrapper.Status.UpgradingBloxstrap" xml:space="preserve">
-    <value>Iegūst jaunāko Bloxstrap...</value>
+    <value>Microstrap is updating... please wait.</value>
   </data>
   <data name="Bootstrapper.Status.WaitingOtherInstances" xml:space="preserve">
     <value>Gaida uz pārējiem logiem...</value>
