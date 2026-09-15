@@ -3,6 +3,8 @@ using System.Windows.Input;
 using CommunityToolkit.Mvvm.Input;
 
 using Bloxstrap.UI.Elements.About;
+using Bloxstrap.UI.Elements.Creator;
+using Bloxstrap.UI.Elements.Dashboard;
 
 namespace Bloxstrap.UI.ViewModels.Installer
 {
@@ -26,6 +28,10 @@ namespace Bloxstrap.UI.ViewModels.Installer
 
         public ICommand LaunchGameManagerCommand => new RelayCommand(LaunchGameManager);
 
+        public ICommand LaunchCreatorCommand => new RelayCommand(LaunchCreator);
+
+        public ICommand LaunchDashboardCommand => new RelayCommand(LaunchDashboard);
+
         public event EventHandler<NextAction>? CloseWindowRequest;
 
         private void LaunchSettings() => CloseWindowRequest?.Invoke(this, NextAction.LaunchSettings);
@@ -37,5 +43,9 @@ namespace Bloxstrap.UI.ViewModels.Installer
         private void LaunchAbout() => new MainWindow().ShowDialog();
 
         private void LaunchGameManager() => CloseWindowRequest?.Invoke(this, NextAction.LaunchGameManager);
+
+        private void LaunchCreator() => new CreatorWindow().ShowDialog();
+
+        private void LaunchDashboard() => new DashboardWindow().ShowDialog();
     }
 }

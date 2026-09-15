@@ -1,0 +1,33 @@
+name: Release Microstrap
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Publish Windows executable
+        run: dotnet publish Bloxstrap/Bloxstrap.csproj -c Release -r win-x64 --self-contained false -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true --nologo
+
+      - name: Package release artifact
+        shell: pwsh
+        run: Compress-Archive -Path Bloxstrap/bin/Release/net6.0-windows/win-x64/publish/* -DestinationPath Microstrap-${{ github.ref_name }}-win-x64.zip
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create ${{ github.ref_name }} Microstrap-${{ github.ref_name }}-win-x64.zip --title "Microstrap ${{ github.ref_name }}" --generate-notes

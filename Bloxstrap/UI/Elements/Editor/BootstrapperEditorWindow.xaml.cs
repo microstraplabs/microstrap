@@ -10,6 +10,8 @@ using ICSharpCode.AvalonEdit.Highlighting;
 using Bloxstrap.UI.Elements.Base;
 using Bloxstrap.UI.ViewModels.Editor;
 using System.Windows;
+using Microsoft.Win32;
+using System.IO.Compression;
 
 namespace Bloxstrap.UI.Elements.Editor
 {
@@ -187,6 +189,38 @@ namespace Bloxstrap.UI.Elements.Editor
         {
             _viewModel.Code = UIXML.Text;
             _viewModel.CodeChanged = true;
+        }
+
+        private void Save_Click(object sender, RoutedEventArgs e) => _viewModel.SaveCommand.Execute(null);
+
+        private void OpenFolder_Click(object sender, RoutedEventArgs e) => _viewModel.OpenThemeFolderCommand.Execute(null);
+
+        private void Close_Click(object sender, RoutedEventArgs e) => Close();
+
+        private void Publish_Click(object sender, RoutedEventArgs e)
+        {
+            _viewModel.SaveCommand.Execute(null);
+
+            var dialog = new SaveFileDialog
+            {
+                FileName = $"{_viewModel.Name}.zip",
+                Filter = "ZIP archive (*.zip)|*.zip"
+            };
+
+            if (dialog.ShowDialog() != true)
+                return;
+
+            try
+            {
+                if (File.Exists(dialog.FileName))
+                    File.Delete(dialog.FileName);
+                ZipFile.CreateFromDirectory(_viewModel.Directory, dialog.FileName);
+                Frontend.ShowMessageBox($"Published '{_viewModel.Name}' successfully.", MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                Frontend.ShowMessageBox($"Could not publish project: {ex.Message}", MessageBoxImage.Error);
+            }
         }
 
         private void OnClosing(object sender, System.ComponentModel.CancelEventArgs e)

@@ -37,13 +37,25 @@
             MinimizeToTray="False"
             UseSnapLayout="True" />
 
-        <avalonedit:TextEditor
-            x:Name="UIXML"
-            Grid.Row="1"
-            Margin="10,10,10,0"
-            ShowLineNumbers="True"
-            Style="{StaticResource NewTextEditor}"
-            SyntaxHighlighting="XML" />
+        <DockPanel Grid.Row="1" Margin="10,0,10,0">
+            <Menu DockPanel.Dock="Top" Padding="0,4">
+                <MenuItem Header="_File">
+                    <MenuItem Header="_Save" Click="Save_Click" />
+                    <MenuItem Header="_Publish project..." Click="Publish_Click" />
+                    <Separator />
+                    <MenuItem Header="_Close" Click="Close_Click" />
+                </MenuItem>
+                <MenuItem Header="_Edit">
+                    <MenuItem Header="Open project folder" Click="OpenFolder_Click" />
+                </MenuItem>
+            </Menu>
+            <avalonedit:TextEditor
+                x:Name="UIXML"
+                Margin="0,4,0,0"
+                ShowLineNumbers="True"
+                Style="{StaticResource NewTextEditor}"
+                SyntaxHighlighting="XML" />
+        </DockPanel>
 
         <ui:Button
             Grid.Row="2"

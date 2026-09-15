@@ -9,7 +9,7 @@
 
 Microstrap is a sleek, open-source replacement for the standard Roblox bootstrapper. It keeps your launch experience quick and clean while giving you thoughtful control over settings, integrations, mods, and engine options.
 
-> **Version 0.1.0** — Microstrap is an early release. Expect the core experience to stay lightweight while features continue to grow.
+> **Version 0.1.5** — Microstrap includes the Creator and Dashboard workflows for building and managing custom themes.
 
 ## Highlights
 
