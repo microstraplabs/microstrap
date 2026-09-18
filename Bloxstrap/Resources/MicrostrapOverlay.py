@@ -29,6 +29,58 @@ class FILETIME(ctypes.Structure):
 kernel32 = ctypes.windll.kernel32
 user32 = ctypes.windll.user32
 
+dwmapi = ctypes.windll.dwmapi
+
+
+class UNSIGNED_RATIO(ctypes.Structure):
+    _fields_ = [("uiNumerator", wintypes.UINT), ("uiDenominator", wintypes.UINT)]
+
+
+class DWM_TIMING_INFO_HEAD(ctypes.Structure):
+    # The fields through cRefresh are stable across supported Windows versions.
+    _fields_ = [
+        ("cbSize", wintypes.UINT),
+        ("rateRefresh", UNSIGNED_RATIO),
+        ("qpcRefreshPeriod", ctypes.c_ulonglong),
+        ("rateCompose", UNSIGNED_RATIO),
+        ("qpcVBlank", ctypes.c_ulonglong),
+        ("cRefresh", ctypes.c_ulonglong),
+    ]
+
+
+def desktop_fps():
+    """Estimate frames presented by the Windows desktop compositor.
+
+    This is intentionally external monitoring: it does not inspect, open, or
+    modify any Roblox process. It is a desktop/compositor estimate, not an
+    instrumented in-game render counter.
+    """
+    try:
+        timing = DWM_TIMING_INFO_HEAD()
+        timing.cbSize = ctypes.sizeof(timing)
+        result = dwmapi.DwmGetCompositionTimingInfo(None, ctypes.byref(timing))
+        if result != 0 or not timing.qpcVBlank:
+            return None
+        now = timing.qpcVBlank
+        previous = desktop_fps.last_sample
+        desktop_fps.last_sample = (now, timing.cRefresh)
+        if previous is None:
+            return None
+        previous_qpc, previous_refresh = previous
+        elapsed = now - previous_qpc
+        frames = timing.cRefresh - previous_refresh
+        if elapsed <= 0 or frames < 0:
+            return None
+        frequency = ctypes.c_longlong()
+        if not kernel32.QueryPerformanceFrequency(ctypes.byref(frequency)) or not frequency.value:
+            return None
+        return max(0.0, min(1000.0, frames * frequency.value / elapsed))
+    except (AttributeError, OSError):
+        return None
+
+
+desktop_fps.last_sample = None
+
 
 def filetime_value(value):
     return (value.dwHighDateTime << 32) | value.dwLowDateTime
@@ -256,7 +308,9 @@ class Overlay:
         gpu_text = "--" if gpu is None else f"{gpu:.0f}%"
         process_text = f"{name} (PID {pid})" if pid else "Roblox process not found"
         mode_text = "Safe mode" if self.safe_mode else "Frequent lookup"
-        self.hud_text.configure(text=f"Microstrap Overlay\nCPU {cpu:.0f}%   GPU {gpu_text}   FPS --")
+        fps = desktop_fps()
+        fps_text = "--" if fps is None else f"{fps:.0f}"
+        self.hud_text.configure(text=f"Microstrap Overlay\nCPU {cpu:.0f}%   GPU {gpu_text}   FPS {fps_text}")
         self.panel_text.configure(
             text=(
                 "MICROSTRAP OVERLAY  ·  F3 to close\n\n"
@@ -264,7 +318,7 @@ class Overlay:
                 f"CPU usage\n  {cpu:.1f}%\n\n"
                 f"Memory usage\n  {memory}%\n\n"
                 f"Roblox GPU engine usage\n  {gpu_text}\n\n"
-                "FPS\n  Not available through safe monitoring\n\n"
+                f"Desktop/compositor FPS\n  {fps_text} FPS (safe estimate)\n\n"
                 f"Monitoring mode\n  {mode_text}\n"
                 "  Windows performance counters\n"
                 "  No code injection or process modification"
