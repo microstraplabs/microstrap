@@ -207,6 +207,43 @@ namespace Bloxstrap
             }
         }
 
+        private static async Task CheckForRobloxAnnouncementsAsync()
+        {
+            const string LOG_IDENT = "App::CheckForRobloxAnnouncementsAsync";
+            try
+            {
+                var topics = await RobloxNewsFeed.GetAnnouncementsAsync();
+                var latest = topics.OrderByDescending(topic => topic.CreatedAt).FirstOrDefault();
+                if (latest is null)
+                    return;
+
+                long previousId = Settings.Prop.LastRobloxAnnouncementId;
+                if (previousId == 0)
+                {
+                    Settings.Prop.LastRobloxAnnouncementId = latest.Id;
+                    Settings.Save();
+                    return;
+                }
+
+                if (latest.Id == previousId || !Settings.Prop.NotifyRobloxAnnouncements)
+                    return;
+
+                Settings.Prop.LastRobloxAnnouncementId = latest.Id;
+                Settings.Save();
+
+                await Current.Dispatcher.InvokeAsync(() => Frontend.ShowBalloonTip(
+                    "Roblox announcement",
+                    latest.DisplayTitle,
+                    System.Windows.Forms.ToolTipIcon.Info,
+                    10
+                ));
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteException(LOG_IDENT, ex);
+            }
+        }
+
         public static async Task<GithubRelease?> GetLatestRelease()
         {
             const string LOG_IDENT = "App::GetLatestRelease";
@@ -420,6 +457,13 @@ namespace Bloxstrap
                 Settings.Load();
                 State.Load();
                 FastFlags.Load();
+
+                if (Settings.Prop.NotifyRobloxAnnouncements && !LaunchSettings.QuietFlag.Active && !LaunchSettings.WatcherFlag.Active && !LaunchSettings.BackgroundUpdaterFlag.Active && !LaunchSettings.UpgradeFlag.Active)
+                    _ = CheckForRobloxAnnouncementsAsync().ContinueWith(task =>
+                    {
+                        if (task.Exception is not null)
+                            Logger.WriteException("App::CheckForRobloxAnnouncementsAsync", task.Exception);
+                    }, TaskScheduler.Default);
 
                 if (!Locale.SupportedLocales.ContainsKey(Settings.Prop.Locale))
                 {

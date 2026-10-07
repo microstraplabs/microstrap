@@ -13,6 +13,8 @@ namespace Bloxstrap.Models.Persistable
         [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
         public bool DeveloperMode { get; set; } = false;
         public bool CheckForUpdates { get; set; } = true;
+        public bool NotifyRobloxAnnouncements { get; set; } = true;
+        public long LastRobloxAnnouncementId { get; set; } = 0;
         public bool ConfirmLaunches { get; set; } = false;
         public string Locale { get; set; } = "nil";
         public bool UseFastFlagManager { get; set; } = true;

@@ -9,9 +9,10 @@
     <AssemblyName>Microstrap</AssemblyName>
     <Product>Microstrap</Product>
     <Description>A sleek, lightweight Roblox bootstrapper.</Description>
-    <ApplicationIcon>Microstrap.ico</ApplicationIcon>
-    <Version>0.1.7</Version>
-    <FileVersion>0.1.7</FileVersion>
+    <ApplicationIcon Condition="Exists('Resources\Seasonal\MicrostrapHalloween.ico')">Resources\Seasonal\MicrostrapHalloween.ico</ApplicationIcon>
+    <ApplicationIcon Condition="!Exists('Resources\Seasonal\MicrostrapHalloween.ico')">Microstrap.ico</ApplicationIcon>
+    <Version>0.1.8</Version>
+    <FileVersion>0.1.8</FileVersion>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
@@ -19,6 +20,10 @@
     
   <ItemGroup>
     <Resource Include="Microstrap.ico" />
+    <Resource Include="Resources\Seasonal\MicrostrapHalloween.png" />
+    <Resource Include="Resources\Seasonal\MicrostrapWinter.png" />
+    <Resource Include="Resources\Seasonal\MicrostrapWinter.ico" />
+    <Resource Include="Resources\Seasonal\MicrostrapHalloween.ico" />
     <Resource Include="Resources\Fonts\NotoSansThai-VariableFont_wdth,wght.ttf" />
     <Resource Include="Resources\Fonts\Rubik-VariableFont_wght.ttf" />
     <Resource Include="Resources\BootstrapperStyles\ByfronDialog\ByfronLogoDark.jpg" />

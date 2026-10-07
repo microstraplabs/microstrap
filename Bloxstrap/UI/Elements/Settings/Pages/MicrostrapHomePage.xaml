@@ -10,17 +10,41 @@
       mc:Ignorable="d"
       d:DesignHeight="700" d:DesignWidth="800"
       Title="Home"
-      Scrollable="True">
+      Scrollable="True"
+      Loaded="Page_Loaded"
+      Unloaded="Page_Unloaded">
     <StackPanel Margin="0,0,14,14">
-        <Border Padding="24" CornerRadius="18" Background="#25213D" BorderBrush="#5D4C8B" BorderThickness="1">
+        <Border Padding="12,10" CornerRadius="12" Background="#311A15" BorderBrush="#D87936" BorderThickness="1" Visibility="{Binding Source={x:Static Application.Current}, Path=Resources[MicrostrapHalloweenVisibility]}">
+            <Grid>
+                <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                <Image Width="58" Height="58" Margin="0,0,12,0" Source="pack://application:,,,/Resources/Seasonal/MicrostrapHalloween.png" Stretch="Uniform" />
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <TextBlock Text="Halloween X Microstrap" FontSize="18" FontWeight="ExtraBold" Foreground="#FFB45C" />
+                    <TextBlock Margin="0,3,0,0" Text="A limited-time Halloween look has arrived. Enjoy the seasonal pumpkin logo and spooky orange glow across the app." FontSize="12" Foreground="#F1D3C4" TextWrapping="Wrap" />
+                </StackPanel>
+                <Border Grid.Column="2" Margin="12,0,0,0" Padding="9,5" VerticalAlignment="Center" CornerRadius="8" Background="#5D291C"><TextBlock Text="LIMITED TIME" FontSize="10" FontWeight="Bold" Foreground="#FFD58D" /></Border>
+            </Grid>
+        </Border>
+        <Border x:Name="WinterPromoCard" Padding="14,12" Margin="0,12,0,0" CornerRadius="14" Background="#182334" BorderBrush="#6B9DCE" BorderThickness="1" Visibility="{Binding Source={x:Static Application.Current}, Path=Resources[MicrostrapWinterVisibility]}">
+            <Grid>
+                <Grid.ColumnDefinitions><ColumnDefinition Width="Auto" /><ColumnDefinition Width="*" /><ColumnDefinition Width="Auto" /></Grid.ColumnDefinitions>
+                <Image Width="58" Height="58" Margin="0,0,12,0" Source="pack://application:,,,/Resources/Seasonal/MicrostrapWinter.png" Stretch="Uniform" />
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <TextBlock Text="Winter X Microstrap" FontSize="18" FontWeight="ExtraBold" Foreground="#D5E9FF" />
+                    <TextBlock x:Name="WinterCountdownText" Margin="0,3,0,0" FontSize="12" Foreground="#C2D8F0" TextWrapping="Wrap" />
+                </StackPanel>
+                <Border Grid.Column="2" Margin="12,0,0,0" Padding="9,5" VerticalAlignment="Center" CornerRadius="8" Background="#29496A"><TextBlock Text="UP NEXT" FontSize="10" FontWeight="Bold" Foreground="#D7E9FF" /></Border>
+            </Grid>
+        </Border>
+        <Border Padding="24" Margin="0,12,0,0" CornerRadius="18" Background="{DynamicResource SolidBackgroundFillColorSecondaryBrush}" BorderBrush="{DynamicResource SystemAccentColorPrimaryBrush}" BorderThickness="1">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
                 <StackPanel MaxWidth="560">
-                    <TextBlock Text="Welcome to Microstrap" FontSize="28" FontWeight="SemiBold" />
-                    <TextBlock Margin="0,8,0,0" Text="A lightweight Roblox bootstrapper with useful tools, clean settings, and a faster way to get into your games." FontSize="14" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
+                    <TextBlock Text="Welcome to Microstrap" FontSize="28" FontWeight="SemiBold" Foreground="#FFF0E6" />
+                    <TextBlock Margin="0,8,0,0" Text="A lightweight Roblox bootstrapper with useful tools, clean settings, and a faster way to get into your games." FontSize="14" Foreground="#DFC6BA" TextWrapping="Wrap" />
                     <StackPanel Orientation="Horizontal" Margin="0,18,0,0">
                         <ui:Button Content="Play Roblox" Icon="Play24" Appearance="Primary" Command="models:GlobalViewModel.OpenWebpageCommand" CommandParameter="roblox://" />
                         <ui:Button Margin="8,0,0,0" Content="Open Roblox website" Icon="Open24" Command="models:GlobalViewModel.OpenWebpageCommand" CommandParameter="https://www.roblox.com/home" />
@@ -28,7 +52,7 @@
                         <ui:Button Margin="8,0,0,0" Content="Add to exclusions" Icon="Shield24" Click="AddToExclusions_Click" />
                     </StackPanel>
                 </StackPanel>
-                <Image Grid.Column="1" Width="104" Height="104" Margin="28,0,8,0" Source="pack://application:,,,/Microstrap.ico" RenderOptions.BitmapScalingMode="HighQuality" />
+                <Image Grid.Column="1" Width="104" Height="104" Margin="28,0,8,0" Source="pack://application:,,,/Resources/Seasonal/MicrostrapHalloween.png" Stretch="Uniform" Visibility="{Binding Source={x:Static Application.Current}, Path=Resources[MicrostrapHalloweenVisibility]}" />
             </Grid>
         </Border>
 
@@ -64,8 +88,8 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <StackPanel Grid.Column="0"><TextBlock Text="STATUS" FontSize="10" Foreground="{DynamicResource TextFillColorTertiaryBrush}" /><TextBlock Margin="0,5,0,0" Text="Ready" FontSize="16" FontWeight="SemiBold" Foreground="#73E2A3" /><TextBlock Margin="0,3,0,0" Text="Microstrap is ready for Roblox" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" /></StackPanel>
-                <StackPanel Grid.Column="1"><TextBlock Text="VERSION" FontSize="10" Foreground="{DynamicResource TextFillColorTertiaryBrush}" /><TextBlock Margin="0,5,0,0" Text="{x:Static app:App.Version}" FontSize="16" FontWeight="SemiBold" Foreground="#29D3E6" /><TextBlock Margin="0,3,0,0" Text="First public release" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" /></StackPanel>
-                <StackPanel Grid.Column="2"><TextBlock Text="TIP" FontSize="10" Foreground="{DynamicResource TextFillColorTertiaryBrush}" /><TextBlock Margin="0,5,0,0" Text="Use Games" FontSize="16" FontWeight="SemiBold" Foreground="#DFA7FF" /><TextBlock Margin="0,3,0,0" Text="to search official recommendations" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" /></StackPanel>
+                <StackPanel Grid.Column="1"><TextBlock Text="VERSION" FontSize="10" Foreground="{DynamicResource TextFillColorTertiaryBrush}" /><TextBlock Margin="0,5,0,0" Text="{x:Static app:App.Version}" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource SystemAccentColorSecondaryBrush}" /><TextBlock Margin="0,3,0,0" Text="First public release" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" /></StackPanel>
+                <StackPanel Grid.Column="2"><TextBlock Text="TIP" FontSize="10" Foreground="{DynamicResource TextFillColorTertiaryBrush}" /><TextBlock Margin="0,5,0,0" Text="Use Games" FontSize="16" FontWeight="SemiBold" Foreground="{DynamicResource SystemAccentColorSecondaryBrush}" /><TextBlock Margin="0,3,0,0" Text="to search official recommendations" FontSize="11" Foreground="{DynamicResource TextFillColorSecondaryBrush}" /></StackPanel>
             </Grid>
         </Border>
     </StackPanel>

@@ -1,0 +1,259 @@
+html {
+  --microstrap-accent-start: #ffad35;
+  --microstrap-accent-end: #f13b38;
+  --microstrap-accent-rgb: 255, 111, 47;
+}
+
+body.microstrap-theme-enabled {
+  --color-action-emphasis-background: var(--microstrap-accent-start) !important;
+  --color-action-emphasis-background-hover: var(--microstrap-accent-end) !important;
+  --color-action-emphasis-background-pressed: var(--microstrap-accent-end) !important;
+  --color-action-emphasis-foreground: #fff !important;
+  --color-state-focus: var(--microstrap-accent-start) !important;
+  --color-state-selection: rgba(var(--microstrap-accent-rgb), .22) !important;
+  --color-surface-0: #150e11 !important;
+  --color-surface-100: #1d1416 !important;
+  --color-surface-200: #281819 !important;
+  --color-surface-300: #35201f !important;
+  --color-border-muted: #49302c !important;
+  background: radial-gradient(ellipse at 55% -24%, rgba(var(--microstrap-accent-rgb), .17), transparent 49%), #150e11 !important;
+}
+
+body.microstrap-theme-enabled #wrap,
+body.microstrap-theme-enabled #container-main,
+body.microstrap-theme-enabled .container-main,
+body.microstrap-theme-enabled main {
+  background: transparent !important;
+}
+
+body.microstrap-theme-enabled .game-card-container,
+body.microstrap-theme-enabled .featured-game-container,
+body.microstrap-theme-enabled .game-card-link,
+body.microstrap-theme-enabled .age-recommendation-card {
+  background-color: #211719 !important;
+  border-color: rgba(var(--microstrap-accent-rgb), .17) !important;
+}
+
+body.microstrap-theme-enabled .game-card-container:hover,
+body.microstrap-theme-enabled .game-card-link:hover {
+  box-shadow: 0 0 0 1px rgba(var(--microstrap-accent-rgb), .5), 0 7px 24px rgba(0, 0, 0, .2) !important;
+}
+
+body.microstrap-theme-enabled #header {
+  background: linear-gradient(105deg, #25110d 0%, #441611 50%, #671a20 100%) !important;
+  border-bottom: 1px solid rgba(var(--microstrap-accent-rgb), .34) !important;
+}
+
+body.microstrap-theme-enabled #navigation,
+body.microstrap-theme-enabled .navbar-fixed-left,
+body.microstrap-theme-enabled .navbar-left {
+  background: #160e12 !important;
+}
+
+body.microstrap-theme-enabled #nav-logo-link {
+  position: relative;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  width: 126px;
+  height: 38px;
+  overflow: visible !important;
+}
+
+body.microstrap-theme-enabled #nav-logo-link .icon-logo,
+body.microstrap-theme-enabled #nav-logo-link .icon-logo-r {
+  display: none !important;
+}
+
+body.microstrap-theme-enabled #nav-logo-link::after {
+  content: "Microstrap";
+  display: block;
+  white-space: nowrap;
+  font-family: Inter, "Arial Black", system-ui, sans-serif;
+  font-size: 20px;
+  line-height: 1;
+  font-weight: 900;
+  letter-spacing: -.8px;
+  background: linear-gradient(100deg, var(--microstrap-accent-start), #ff7537 48%, var(--microstrap-accent-end));
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 1px 8px rgba(var(--microstrap-accent-rgb), .2));
+}
+
+body.microstrap-theme-enabled .btn-primary,
+body.microstrap-theme-enabled .btn-cta-md,
+body.microstrap-theme-enabled .btn-cta-lg,
+body.microstrap-theme-enabled [data-testid="foundation-web-button"].bg-action-emphasis,
+body.microstrap-theme-enabled button[class*="bg-action-emphasis"] {
+  color: #fff !important;
+  background: linear-gradient(105deg, var(--microstrap-accent-start), var(--microstrap-accent-end)) !important;
+  border-color: transparent !important;
+}
+
+body.microstrap-theme-enabled .btn-primary:hover,
+body.microstrap-theme-enabled .btn-cta-md:hover,
+body.microstrap-theme-enabled .btn-cta-lg:hover {
+  filter: brightness(1.08);
+}
+
+body.microstrap-theme-enabled .notification-red,
+body.microstrap-theme-enabled .notification-badge,
+body.microstrap-theme-enabled .text-link,
+body.microstrap-theme-enabled a:hover {
+  background: linear-gradient(135deg, var(--microstrap-accent-start), var(--microstrap-accent-end)) !important;
+}
+
+body.microstrap-theme-enabled a:hover {
+  color: var(--microstrap-accent-start) !important;
+}
+
+body.microstrap-compact-cards .game-card-container,
+body.microstrap-compact-cards .game-card-link {
+  border-radius: 10px;
+}
+
+body.microstrap-hide-promotions [class*="upsell"],
+body.microstrap-hide-promotions [data-testid*="promotion"],
+body.microstrap-hide-promotions .premium-upsell {
+  display: none !important;
+}
+
+#header [data-microstrap-settings] {
+  display: flex;
+  align-items: center;
+  padding: 0 5px;
+}
+
+#header .microstrap-settings-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 0 9px;
+  color: #fff7f3;
+  font: 800 12px/1 Inter, system-ui, sans-serif;
+  background: linear-gradient(105deg, rgba(255, 173, 53, .16), rgba(241, 59, 56, .16));
+  border: 1px solid rgba(255, 127, 60, .45);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#header .microstrap-settings-trigger:focus-visible { outline: 2px solid var(--microstrap-accent-start); outline-offset: 2px; }
+
+#header .microstrap-settings-trigger:hover,
+#header .microstrap-settings-trigger[aria-expanded="true"] {
+  background: linear-gradient(105deg, #ffad35, #f13b38);
+  border-color: transparent;
+}
+
+#header .microstrap-settings-trigger > span:first-child {
+  color: #ffb242;
+  font-size: 17px;
+}
+
+#header .microstrap-settings-label {
+  color: transparent;
+  background: linear-gradient(100deg, var(--microstrap-accent-start), var(--microstrap-accent-end));
+  background-clip: text;
+  -webkit-background-clip: text;
+  font-weight: 900;
+}
+
+body:not(.microstrap-theme-enabled) #header .microstrap-settings-trigger {
+  color: #3a241e;
+}
+
+body:not(.microstrap-theme-enabled) #header .microstrap-settings-trigger > span:first-child,
+body:not(.microstrap-theme-enabled) #header .microstrap-settings-label {
+  color: #d94d32;
+}
+
+body:not(.microstrap-theme-enabled) #header .microstrap-settings-label {
+  background: none;
+  -webkit-text-fill-color: #d94d32;
+}
+
+#header .microstrap-settings-trigger:hover > span:first-child,
+#header .microstrap-settings-trigger[aria-expanded="true"] > span:first-child {
+  color: white;
+}
+
+#header .microstrap-settings-menu-trigger {
+  width: 100%;
+  justify-content: flex-start;
+  padding: 8px 12px;
+}
+
+body > [data-microstrap-panel] {
+  position: fixed;
+  z-index: 2147483647;
+  top: 70px;
+  right: 18px;
+  width: min(360px, calc(100vw - 28px));
+  padding: 17px;
+  color: #fff4ef;
+  background: #191315;
+  border: 1px solid #573128;
+  border-radius: 15px;
+  box-shadow: 0 16px 60px rgba(0, 0, 0, .52), 0 0 28px rgba(var(--microstrap-accent-rgb), .1);
+  font: 13px/1.4 Inter, system-ui, sans-serif;
+}
+
+.microstrap-panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding-bottom: 13px;
+  border-bottom: 1px solid #372725;
+}
+
+.microstrap-panel-brand {
+  display: block;
+  width: fit-content;
+  color: transparent;
+  background: linear-gradient(100deg, var(--microstrap-accent-start), var(--microstrap-accent-end));
+  background-clip: text;
+  -webkit-background-clip: text;
+  font-size: 22px;
+  line-height: 1.1;
+  font-weight: 950;
+  letter-spacing: -.8px;
+}
+
+.microstrap-panel-caption,
+.microstrap-toggle-row small {
+  display: block;
+  margin-top: 4px;
+  color: #ae9991;
+  font-size: 11px;
+}
+
+.microstrap-panel-header [data-close] {
+  width: 30px;
+  height: 30px;
+  color: #f1dcd5;
+  background: #302321;
+  border: 0;
+  border-radius: 8px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.microstrap-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #302321;
+  cursor: pointer;
+}
+
+.microstrap-toggle-row b { font-size: 12px; }
+.microstrap-toggle-row input { width: 36px; height: 19px; accent-color: #f15a36; }
+.microstrap-colors { display: flex; gap: 14px; padding-top: 14px; }
+.microstrap-colors label { display: flex; flex: 1; align-items: center; justify-content: space-between; color: #d8c4bd; font-size: 11px; }
+.microstrap-colors input { width: 38px; height: 27px; padding: 1px; background: #281c1a; border: 1px solid #55332c; border-radius: 6px; }
+.microstrap-panel-footer { padding-top: 13px; color: #927c74; font-size: 10px; }

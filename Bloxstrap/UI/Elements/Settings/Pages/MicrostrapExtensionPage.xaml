@@ -1,0 +1,43 @@
+<ui:UiPage x:Class="Bloxstrap.UI.Elements.Settings.Pages.MicrostrapExtensionPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+      mc:Ignorable="d"
+      d:DesignHeight="700" d:DesignWidth="800"
+      Title="Microstrap Extension"
+      Scrollable="True">
+    <StackPanel Margin="0,0,14,14">
+        <Border Padding="22" CornerRadius="16" Background="#291713" BorderBrush="#A84935" BorderThickness="1">
+            <StackPanel>
+                <TextBlock Text="Microstrap for Roblox" FontSize="26" FontWeight="ExtraBold" Foreground="#FFF3EC" />
+                <TextBlock Margin="0,8,0,0" Text="A customizable orange-to-red refresh for Roblox in your browser. Keep Roblox's games, account, and navigation—with your own Microstrap look." FontSize="14" Foreground="#E5C9BE" TextWrapping="Wrap" />
+                <StackPanel Orientation="Horizontal" Margin="0,18,0,0">
+                    <ui:Button x:Name="InstallLocalExtensionButton" Content="Install local extension" Icon="ArrowDownload24" Appearance="Primary" Click="InstallLocalExtension_Click" />
+                    <ui:Button Margin="8,0,0,0" Content="Open installation instructions" Icon="Open24" Click="OpenInstructions_Click" />
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <TextBlock Margin="0,22,0,8" Text="Extension settings" FontSize="20" FontWeight="SemiBold" />
+        <TextBlock Text="Install the local extension, then open Roblox and use the Microstrap control in its top bar or the browser extension button to customize the site." FontSize="13" Foreground="{DynamicResource TextFillColorSecondaryBrush}" TextWrapping="Wrap" />
+
+        <ui:CardExpander Margin="0,14,0,0" IsExpanded="True">
+            <ui:CardExpander.Header>
+                <StackPanel>
+                    <TextBlock Text="What you can customize" FontSize="15" FontWeight="SemiBold" />
+                    <TextBlock Margin="0,3,0,0" Text="Your choices stay in browser extension storage." FontSize="12" Foreground="{DynamicResource TextFillColorTertiaryBrush}" />
+                </StackPanel>
+            </ui:CardExpander.Header>
+            <StackPanel>
+                <TextBlock Margin="0,0,0,8" Text="• Orange-to-red colors across Roblox navigation, cards, and controls" TextWrapping="Wrap" />
+                <TextBlock Margin="0,0,0,8" Text="• Replace the Roblox wordmark with Microstrap gradient lettering" TextWrapping="Wrap" />
+                <TextBlock Margin="0,0,0,8" Text="• Compact game cards and optional promotional panels" TextWrapping="Wrap" />
+                <TextBlock Text="• Custom orange and red gradient colors" TextWrapping="Wrap" />
+            </StackPanel>
+        </ui:CardExpander>
+
+        <TextBlock x:Name="InstallStatus" Margin="0,12,0,0" TextWrapping="Wrap" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+    </StackPanel>
+</ui:UiPage>

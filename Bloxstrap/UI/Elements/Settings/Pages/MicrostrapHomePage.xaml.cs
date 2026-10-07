@@ -1,11 +1,42 @@
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace Bloxstrap.UI.Elements.Settings.Pages
 {
     public partial class MicrostrapHomePage
     {
-        public MicrostrapHomePage() => InitializeComponent();
+        private static readonly DateTimeOffset WinterUpdateAt = new(2026, 11, 1, 14, 0, 0, TimeSpan.FromHours(2));
+        private readonly DispatcherTimer _countdownTimer = new() { Interval = TimeSpan.FromSeconds(1) };
+
+        public MicrostrapHomePage()
+        {
+            InitializeComponent();
+            _countdownTimer.Tick += (_, _) => UpdateWinterCountdown();
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            UpdateWinterCountdown();
+            _countdownTimer.Start();
+        }
+
+        private void Page_Unloaded(object sender, RoutedEventArgs e) => _countdownTimer.Stop();
+
+        private void UpdateWinterCountdown()
+        {
+            TimeSpan remaining = WinterUpdateAt - DateTimeOffset.UtcNow;
+            if (remaining <= TimeSpan.Zero)
+            {
+                WinterCountdownText.Text = "The Winter X Microstrap update is now arriving!";
+                WinterPromoCard.Visibility = Visibility.Collapsed;
+                _countdownTimer.Stop();
+                return;
+            }
+
+            int days = (int)remaining.TotalDays;
+            WinterCountdownText.Text = $"The Winter X Microstrap update arrives in {days} days, {remaining.Hours:D2}:{remaining.Minutes:D2}:{remaining.Seconds:D2} (November 1, 2026 at 2:00 PM CEST).";
+        }
 
         // TEMPORARY: adds Microstrap's install locations to Microsoft Defender exclusions.
         // This exists to work around antivirus false positives (e.g. Trojan:Win32/Cloxer)
@@ -14,8 +45,6 @@ namespace Bloxstrap.UI.Elements.Settings.Pages
         {
             const string logId = "MicrostrapHomePage::AddToExclusions_Click";
 
-            // the install folder covers everything underneath it (Versions, Downloads,
-            // GameManager, ...), and the executables are added in case they sit elsewhere
             var targets = new List<string>();
 
             void Add(string? path)
@@ -34,13 +63,11 @@ namespace Bloxstrap.UI.Elements.Settings.Pages
                 return;
             }
 
-            // double any single quotes so the paths survive PowerShell's quoting
             string arguments = String.Join(" ", targets.Select(x => $"-ExclusionPath '{x.Replace("'", "''")}'"));
             string powerShellArgs = $"-NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"Add-MpPreference {arguments}\"";
 
             App.Logger.WriteLine(logId, $"Adding Microsoft Defender exclusions: {String.Join(", ", targets)}");
 
-            // try without elevation first, then escalate through UAC if Defender refuses
             var startInfo = new ProcessStartInfo
             {
                 FileName = "powershell.exe",
@@ -94,7 +121,6 @@ namespace Bloxstrap.UI.Elements.Settings.Pages
                 return;
             }
 
-            // Defender requires admin rights to change exclusions, so ask through UAC
             startInfo.UseShellExecute = true;
             startInfo.Verb = "runas";
             startInfo.CreateNoWindow = false;

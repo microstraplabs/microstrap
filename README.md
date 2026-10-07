@@ -9,7 +9,7 @@
 
 Microstrap is a sleek, open-source replacement for the standard Roblox bootstrapper. It keeps your launch experience quick and clean while giving you thoughtful control over settings, integrations, mods, and engine options.
 
-> **Version 0.1.7** — Microstrap adds the opt-in Microstrap Overlay integration for non-invasive Roblox performance monitoring.
+> **Version 0.1.8** — Live Roblox announcements and published release notes, optional announcement notifications, and the Microstrap Roblox browser theme extension.
 
 ## Highlights
 
@@ -17,12 +17,19 @@ Microstrap is a sleek, open-source replacement for the standard Roblox bootstrap
 - A polished Windows interface with dark and light themes
 - Discord Rich Presence and activity integrations
 - Optional mod support for compatible Roblox content
+- Live Roblox Developer Forum announcements and published release notes
+- Optional Windows notifications for new official Roblox announcements
+- A browser extension with a customizable orange-to-red Roblox theme
 - Graphics and engine settings in one place
 - No paid features, subscriptions, or unnecessary bloat
 
 ## Installing
 
 Download the latest Microstrap release from the [GitHub releases page](https://github.com/microstrap/microstrap/releases/latest), then run the installer. Microstrap is currently supported on Windows PCs with the .NET 6 Desktop Runtime.
+
+## Roblox browser extension
+
+The optional Chromium extension can be loaded unpacked from [MicrostrapExtension](MicrostrapExtension/README.md). It restyles Roblox with the Microstrap gradient and provides appearance, card layout, and promotion settings.
 
 ## Building
 

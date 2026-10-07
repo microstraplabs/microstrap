@@ -22,6 +22,12 @@ namespace Bloxstrap.UI.ViewModels.Settings
             set => App.Settings.Prop.EnableAnalytics = value;
         }
 
+        public bool RobloxAnnouncementsEnabled
+        {
+            get => App.Settings.Prop.NotifyRobloxAnnouncements;
+            set => App.Settings.Prop.NotifyRobloxAnnouncements = value;
+        }
+
         public WebEnvironment WebEnvironment
         {
             get => App.Settings.Prop.WebEnvironment;
