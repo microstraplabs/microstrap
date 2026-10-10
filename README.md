@@ -9,6 +9,8 @@
 
 Microstrap is a sleek, open-source replacement for the standard Roblox bootstrapper. It keeps your launch experience quick and clean while giving you thoughtful control over settings, integrations, mods, and engine options.
 
+> **Version 0.1.9** — Detect Roblox experience launches and open Microstrap's game launcher, while leaving direct server-session joins intact.
+>
 > **Version 0.1.8** — Live Roblox announcements and published release notes, optional announcement notifications, and the Microstrap Roblox browser theme extension.
 
 ## Highlights

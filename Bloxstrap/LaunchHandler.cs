@@ -82,7 +82,17 @@ namespace Bloxstrap
             else if (App.LaunchSettings.RobloxLaunchMode != LaunchMode.None)
             {
                 App.Logger.WriteLine(LOG_IDENT, $"Opening bootstrapper ({App.LaunchSettings.RobloxLaunchMode})");
-                LaunchRoblox(App.LaunchSettings.RobloxLaunchMode);
+
+                if (App.LaunchSettings.RobloxLaunchMode == LaunchMode.Player
+                    && TryGetExperiencePlaceId(App.LaunchSettings.RobloxLaunchArgs, out long placeId))
+                {
+                    App.Logger.WriteLine(LOG_IDENT, $"Detected experience launch for place {placeId}");
+                    LaunchGameByPlaceId(placeId);
+                }
+                else
+                {
+                    LaunchRoblox(App.LaunchSettings.RobloxLaunchMode);
+                }
             }
             else if (!App.LaunchSettings.QuietFlag.Active)
             {
@@ -224,6 +234,23 @@ namespace Bloxstrap
         public static void LaunchRoblox(LaunchMode launchMode)
         {
             LaunchRoblox(launchMode, null);
+        }
+
+        private static bool TryGetExperiencePlaceId(string launchArgs, out long placeId)
+        {
+            placeId = 0;
+
+            if (!Uri.TryCreate(launchArgs, UriKind.Absolute, out var launchUri)
+                || !(launchUri.Scheme.Equals("roblox", StringComparison.OrdinalIgnoreCase)
+                    || launchUri.Scheme.Equals("roblox-player", StringComparison.OrdinalIgnoreCase)))
+                return false;
+
+            var query = System.Web.HttpUtility.ParseQueryString(launchUri.Query);
+            // A specific server/session deeplink must launch as-is, not be replaced by the game picker.
+            if (!String.IsNullOrEmpty(query["gameInstanceId"]) || !String.IsNullOrEmpty(query["accessCode"]))
+                return false;
+
+            return Int64.TryParse(query["placeId"], out placeId) && placeId > 0;
         }
 
         public static void LaunchGame(RecommendedGame game)

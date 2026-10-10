@@ -61,6 +61,8 @@
                     <ui:NavigationItem Content="GAMES" IsEnabled="False" />
                     <ui:NavigationItem Content="Games" PageType="{x:Type pages:GamesPage}" Icon="Games24" Tag="games" />
                     <ui:NavigationItem Content="CUSTOMIZATION" IsEnabled="False" />
+                    <ui:NavigationItem Content="MICROSTRAP" IsEnabled="False" />
+                    <ui:NavigationItem Content="Downgrade Microstrap" PageType="{x:Type pages:MicrostrapDowngradePage}" Icon="ArrowDownload24" Tag="downgrade" />
                     <ui:NavigationItem Content="{x:Static resources:Strings.Menu_Integrations_Title}" PageType="{x:Type pages:IntegrationsPage}" Icon="Add28" Tag="integrations" />
                     <ui:NavigationItem Content="{x:Static resources:Strings.Menu_Behaviour_Title}" PageType="{x:Type pages:BehaviourPage}" Icon="PlaySettings20" Tag="bootstrapper" />
                     <ui:NavigationItem Content="{x:Static resources:Strings.Menu_Mods_Title}" PageType="{x:Type pages:ModsPage}" Icon="WrenchScrewdriver20" Tag="mods" />

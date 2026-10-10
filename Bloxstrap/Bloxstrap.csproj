@@ -11,8 +11,8 @@
     <Description>A sleek, lightweight Roblox bootstrapper.</Description>
     <ApplicationIcon Condition="Exists('Resources\Seasonal\MicrostrapHalloween.ico')">Resources\Seasonal\MicrostrapHalloween.ico</ApplicationIcon>
     <ApplicationIcon Condition="!Exists('Resources\Seasonal\MicrostrapHalloween.ico')">Microstrap.ico</ApplicationIcon>
-    <Version>0.1.8</Version>
-    <FileVersion>0.1.8</FileVersion>
+    <Version>0.1.9</Version>
+    <FileVersion>0.1.9</FileVersion>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>

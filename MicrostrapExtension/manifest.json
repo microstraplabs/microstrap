@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Microstrap for Roblox",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Give Roblox a Microstrap orange-to-red look, customize the experience, and keep your familiar Roblox navigation.",
   "permissions": ["storage"],
   "host_permissions": ["https://www.roblox.com/*"],
