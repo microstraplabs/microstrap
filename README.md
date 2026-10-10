@@ -25,7 +25,7 @@ Microstrap is a sleek, open-source replacement for the standard Roblox bootstrap
 
 ## Installing
 
-Download the latest Microstrap release from the [GitHub releases page](https://github.com/microstrap/microstrap/releases/latest), then run the installer. Microstrap is currently supported on Windows PCs with the .NET 6 Desktop Runtime.
+Download the latest Microstrap release from the [GitHub releases page](https://github.com/microstraplabs/microstrap/releases/latest), then run the installer. Microstrap is currently supported on Windows PCs with the .NET 6 Desktop Runtime.
 
 ## Roblox browser extension
 
